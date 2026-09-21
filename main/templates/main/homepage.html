@@ -1,0 +1,1591 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}Acheik Aura - Home{% endblock %}
+{% block content %}
+<section class="banner" id="home">
+  <!-- <link rel="stylesheet" href="{% static 'main/css/homeagain.css' %}"> -->
+
+<style> html { scroll-behavior: smooth; }
+   body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8e7c1;
+      overflow-x: hidden;
+    }
+                                               
+    /* Header */
+    header {
+      background-color: #1c3a2c;
+      padding: 15px 30px;
+    }
+
+    .nav-container {
+      display: flex;
+      text-align: 10px;
+      justify-content: space-between;
+      color: #f8e7c1;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      width: 100px;
+      object-fit: cover;
+    }
+
+    .brand-text {
+  margin-left: -640px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .brand-text p {
+      margin: 3px 0 0;
+      font-size: 12px;
+      font-style: bold;
+      opacity: 0.8;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .language-select,
+    .nav-select {
+      background-color: #f8e7c1;
+      color: #1c3a2c;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .search-bar {
+      width: 200px;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .signup-btn {
+      background-color: #f8e7c1;
+      color: #1c3a2c;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .cartlogo {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+    
+
+
+    /* Sub Navbar */
+    .sub-nav-wrapper {
+      background-color: #faefd5;
+      display: flex;
+      gap: 400px;
+      padding: 10px 20px;
+      align-items: center;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+      color: #1c3a2c;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+
+    .sub-navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 50px;
+      margin: 0;
+      padding: 0;
+      flex-wrap: wrap;
+    }
+
+    .sub-navbar li {
+      position: relative;
+    }
+
+    .sub-navbar a {
+      text-decoration: none;
+      color: #1c3a2c;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sub-navbar a:hover {
+      background-color: #e0d6bb;
+    }
+
+    /* Dropdown */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 35px;
+      left: 0;
+      background-color: #fff7e3;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      min-width: 160px;
+      z-index: 1000;
+    }
+
+    .dropdown-menu a {
+
+      display: none;
+
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #e0d6bb;
+    }
+
+    .dropdown.open .dropdown-menu {
+      display: block;
+      padding: 10px 20px;
+      color: #1c3a2c;
+      text-decoration: none;
+      border-bottom: #1c3a2c 1px;
+    }
+
+    /* Show dropdown only when 'open' class is added */
+    .dropdown.open .dropdown-menu a {
+      display: block;
+
+
+
+    }
+
+    .sub-nav-wrapper {
+      position: sticky;
+      top: 110px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .sub-nav-wrapper.sticky {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      background-color: #f8e7c1;
+    }
+
+
+
+    /* Side Drawer */
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      left: -350px;
+
+      width: 300px;
+      height: 100vh;
+      background-color: #1c3a2c;
+      color: #f8e7c1;
+      padding: 30px 20px;
+      transition: left 0.3s ease;
+      z-index: 2000;
+      overflow-y: auto;
+    }
+
+    .side-drawer.open {
+      left: 0;
+
+    }
+
+    .side-drawer .close-btn {
+      font-size: 45px;
+      cursor: pointer;
+      top: 3px;
+      display: block;
+      left: 300px;
+      position: absolute;
+    }
+
+    .drawer-title {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-align: center;
+      border-bottom: 2px solid #f8e7c1;
+      padding-bottom: 10px;
+
+    }
+
+    .drawer-section {
+      margin-bottom: 10px;
+    }
+
+    .drawer-section h4 {
+      font-size: 18px;
+      cursor: pointer;
+      position: relative;
+      padding: 10px;
+      background-color: #264c3b;
+      border-radius: 5px;
+      margin: 0;
+    }
+
+    .drawer-section h4:hover {
+      background-color: #2f5d48;
+    }
+
+    .submenu {
+      display: none;
+      padding-left: 15px;
+      margin-top: 10px;
+    }
+
+    .submenu a {
+      display: block;
+
+      margin: 6px 0;
+      font-size: 17px;
+      color: #f8e7c1;
+      text-decoration: none;
+
+    }
+
+    .submenu a:hover {
+      text-decoration: none;
+    }
+
+    .submenu-group {
+      margin-bottom: 10px;
+    }
+
+    .nested-submenu {
+      display: none;
+      padding-left: 20px;
+      margin-top: 6px;
+      background-color: #f8e7c1;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      min-width: 160px;
+      text-decoration: none;
+      color: #1c3a2c;
+      line-height: 30px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .nested-submenu a {
+      font-size: 15px;
+      color: #1c3a2c;
+      font-weight: bold;
+
+
+
+    }
+
+    .nested-submenu a:hover {
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      min-width: 140px;
+
+    }
+
+    /* Banner */
+    .banner {
+      background-color: #f8e7c1;
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .banner-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      max-width: 1300px;
+      width: 100%;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    .side-image {
+      width: 300px;
+      max-width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .banner-text {
+      max-width: 500px;
+      color: #1c3a2c;
+      margin: 0 auto;
+    }
+
+    .banner-text h2 {
+      font-size: 30px;
+      margin-bottom: 15px;
+    }
+
+    .banner-text p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .browse-button {
+      display: inline-block;
+      background-color: #1c3a2c;
+      color: #f8e7c1;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /*wedding collecction*/
+    /* Shared section styles */
+    .section {
+      padding: 50px 5%;
+      background-color: #1c3a2c;
+
+    }
+
+    .section h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #f8e7c1;
+
+    }
+
+    /* Wedding collection styles */
+    .collection-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+    }
+
+    .collection-item {
+      position: relative;
+      flex: 1 1 calc(20% - 20px);
+      min-width: 200px;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      color: #1c3a2c;
+      border-radius: 10px;
+      padding: 10px;
+      height: 400px;
+      background-color: #ebd29b;
+    }
+
+    .collection-item img {
+      width: 100%;
+      object-fit: cover;
+      height: auto;
+      
+      display: block;
+      border-radius: 8px;
+      transition: transform 0.5s ease;
+    }
+
+    .collection-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .collection-title {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 18px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Designer section */
+    .designer-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      color: #1c3a2c;
+    }
+
+    .designer-card {
+      position: relative;
+      flex: 1 1 calc(20% - 20px);
+      min-width: 200px;
+      overflow: hidden;
+      color: #1c3a2c;
+      text-align: center;
+      background-color: #000;
+      cursor: pointer;
+      height: 400px;
+
+    }
+
+    .designer-card img {
+      width: 100%;
+      height: 500px;
+      position: absolute;
+      bottom: -30px;
+      transition: transform 0.4s ease;
+      display: block;
+    }
+
+    .designer-card:hover img {
+      transform: scale(1.05);
+    }
+
+    #md1 {
+      background-color: #e0d6bb;
+    }
+
+    #md2 {
+      background-color: #e0d6bb;
+
+
+    }
+
+    #md3 {
+      background-color: #e0d6bb;
+
+    }
+
+    #md4 {
+      background-color: #e0d6bb;
+
+    }
+
+    .designer-info {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      z-index: 2;
+    }
+
+    .designer-info h3 {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .shop-button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 14px;
+      border: 1.5px solid #1c3a2c;
+      color: #1c3a2c;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+
+    .shop-button:hover {
+      background-color: #f8e7c1;
+      color: black;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+
+      .designer-card,
+      .collection-item {
+        flex: 1 1 calc(50% - 20px);
+      }
+    }
+
+    @media (max-width: 600px) {
+
+      .designer-card,
+      .collection-item {
+        flex: 1 1 100%;
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Styles for "The Story Behind Acheik" section */
+    .acheik-story-section {
+      background-color: #faefd5;
+      /* The light yellow background from the image */
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 500px;
+      /* Vertically align content */
+    }
+
+    .acheik-story-container {
+      display: flex;
+      align-items: center;
+      gap: 150px;
+      /* Space between image and text */
+      max-width: 2500px;
+      width: 100%;
+      flex-wrap: wrap;
+      /* Allow wrapping on smaller screens */
+      justify-content: center;
+      /* Center items when wrapped */
+    }
+
+    .acheik-story-image-card {
+      flex-shrink: 0;
+      /* Prevent image from shrinking */
+      width: 450px;
+      /* Adjust as needed */
+      max-width: 100%;
+      border-radius: 15px;
+      /* Rounded corners for the card */
+      overflow: hidden;
+      /* Ensures image corners are also rounded */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      /* Subtle shadow for the card */
+    }
+
+    .acheik-story-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      /* Remove extra space below image */
+      object-fit: cover;
+    }
+
+    .acheik-story-content {
+      flex-grow: 1;
+      /* Allow content to take up remaining space */
+      max-width: 600px;
+      /* Limit text width for readability */
+      color: #1c3a2c;
+      /* Dark green text color */
+      text-align: left;
+      /* Align text to the left */
+    }
+
+    .acheik-story-content h3 {
+      font-size: 32px;
+      /* Larger heading */
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .acheik-story-content p {
+      font-size: 18px;
+      /* Slightly larger body text */
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .knowledge-button {
+      display: inline-block;
+      background-color: #1c3a2c;
+      /* Dark green button */
+      color: #f8e7c1;
+      /* Light yellow text */
+      padding: 12px 25px;
+      border-radius: 8px;
+      /* Slightly more rounded button */
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+    }
+
+    .knowledge-button:hover {
+      background-color: #2f5b43;
+      /* Darker green on hover */
+    }
+
+    .special h2 {
+
+      margin-bottom: 50px;
+      margin-left: 60px;
+      color: #1c3a2c;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .specials-section {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-left: 60px;
+      width: 100%;
+    }
+
+    .special-card {
+      position: relative;
+      overflow: hidden;
+      width: 320px;
+      height: 300px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .special-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .special-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .specialoverlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: height 0.4s ease-in-out;
+    }
+
+    .special-card:hover .specialoverlay {
+      height: 30%;
+    }
+
+    .specialoverlay h3 {
+      margin: 0;
+      font-size: 18px;
+      padding: 10px;
+      background-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .explore-button {
+      padding: 8px 16px;
+      background-color: white;
+      color: #333;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      text-decoration: none;
+
+    }
+
+    .explore-button:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Individual background colors per design on hover */
+    .card1 .specialoverlay {
+      background-color: rgba(4, 62, 4, 0.784);
+      /* Yellow */
+    }
+
+    .card2 .specialoverlay {
+      background-color: rgba(4, 62, 4, 0.784);
+      /* Light green */
+    }
+
+    .card3 .specialoverlay {
+      background-color: rgba(4, 62, 4, 0.784);
+      /* Pink */
+    }
+
+    .card4 .specialoverlay {
+      background-color: rgba(4, 62, 4, 0.784);
+      /* Salmon */
+    }
+
+    /* Responsive adjustments for Acheik Story */
+    @media (max-width: 900px) {
+      .acheik-story-container {
+        flex-direction: column;
+        /* Stack image and text vertically */
+        text-align: center;
+        /* Center text when stacked */
+      }
+
+      .acheik-story-image-card {
+        width: 80%;
+        /* Adjust image width for smaller screens */
+        margin-bottom: 30px;
+      }
+
+      .acheik-story-content {
+        max-width: 90%;
+        /* Allow content to take more width */
+      }
+    }
+
+    @media (max-width: 600px) {
+      .acheik-story-section {
+        padding: 40px 15px;
+      }
+
+      .acheik-story-image-card {
+        width: 95%;
+        /* Adjust image width for smaller screens */
+      }
+
+      .acheik-story-content h3 {
+        font-size: 28px;
+      }
+
+      .acheik-story-content p {
+        font-size: 16px;
+      }
+    }
+
+    /* Responsive adjustments for Acheik Match */
+    @media (max-width: 900px) {
+      .acheik-match-container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .acheik-match-images {
+        width: 350px;
+        /* Adjust size of the image block */
+        height: 400px;
+        margin-bottom: 50px;
+        /* Space between image and text */
+      }
+
+      .image-circle {
+        width: 200px;
+        height: 200px;
+      }
+
+      .acheik-match-content {
+        max-width: 90%;
+      }
+
+      .acheik-match-content h2 {
+        font-size: 32px;
+      }
+
+      .acheik-match-content p {
+        font-size: 17px;
+      }
+
+      .try-it-now-button {
+        padding: 12px 25px;
+        font-size: 16px;
+      }
+    }
+
+    /* Styles for "Find Your Perfect Acheik Match" section */
+    .acheik-match-section {
+      background-color: #faefd5;
+      /* Light yellow background */
+      padding: 80px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #1c3a2c;
+      /* Dark green text */
+    }
+
+    .acheik-match-container {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      max-width: 1200px;
+      width: 100%;
+      flex-wrap: wrap;
+      /* Allow wrapping */
+      justify-content: center;
+      /* Center items when wrapped */
+    }
+
+    .acheik-match-images {
+      position: relative;
+      /* For overlapping circles */
+      width: 450px;
+      /* Base width for the image composition */
+      height: 500px;
+      /* Base height for the image composition */
+      flex-shrink: 0;
+      /* Prevent from shrinking */
+
+      /* background-color: #1c3a2c; */
+      /* border-radius: 15px; Rounded corners for the entire block
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); More prominent shadow */
+    }
+
+    .image-circle {
+      position: absolute;
+      width: 250px;
+      /* Size of the circular images */
+      height: 250px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #1c3a2c;
+      border: 5px solid #1c3a2c;
+      /* Dark green border as seen in the image */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      /* Shadow for individual circles */
+    }
+
+    .image-circle-top-left {
+      top: 30px;
+      left: 20px;
+      z-index: 1;
+      /* Bring to front */
+    }
+
+    .image-circle-top-right {
+      top: 30px;
+      right: -4px;
+      z-index: 2;
+      /* Behind top-left */
+    }
+
+    .image-circle-bottom {
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 6;
+      /* Bring to front most */
+    }
+
+    .match-image {
+      width: 100%;
+      /* Changed from 150px to 100% to ensure image fills circle */
+      height: 100%;
+      object-fit: cover;
+      /* Ensure images fill their circles */
+      display: block;
+    }
+
+    .acheik-match-content {
+      flex-grow: 1;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    .acheik-match-content h2 {
+      font-size: 38px;
+      margin-bottom: 25px;
+      line-height: 1.2;
+    }
+
+    .acheik-match-content p {
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 35px;
+    }
+
+    .try-it-now-button {
+      background-color: #1c3a2c;
+      /* Dark green button */
+      color: #f8e7c1;
+      /* Light yellow text */
+      padding: 15px 35px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .try-it-now-button:hover {
+      background-color: #2f5b43;
+    }
+
+    @media (max-width: 600px) {
+      .acheik-match-section {
+        padding: 60px 15px;
+      }
+
+      .acheik-match-images {
+        width: 90%;
+        height: 380px;
+        /* Adjusted height for smaller screens */
+        border-radius: 10px;
+      }
+
+      .image-circle {
+        width: 150px;
+        height: 150px;
+        border-width: 3px;
+        /* Smaller border */
+      }
+
+      .image-circle-top-left {
+        top: 20px;
+        left: 20px;
+      }
+
+      .image-circle-top-right {
+        top: 20px;
+        right: 20px;
+      }
+
+      .image-circle-bottom {
+        bottom: 20px;
+      }
+
+      .acheik-match-content h2 {
+        font-size: 28px;
+      }
+
+      .acheik-match-content p {
+        font-size: 16px;
+      }
+    }
+
+    /* Styles for "Our Services" section */
+    .our-services-section {
+      background-color: #fff7e3;
+      /* Same background as the story section */
+      padding: 50px 50px;
+      /* More vertical padding */
+      text-align: center;
+      color: #1c3a2c;
+      /* Dark green text */
+      height: 350px;
+      margin-top: 30px;
+    }
+
+    .our-services-section h2 {
+      font-size: 30px;
+      margin-bottom: 30px;
+      /* More space below heading */
+      font-weight: 600;
+    }
+
+    .services-container {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      /* Space between service items */
+      flex-wrap: wrap;
+      /* Allow items to wrap */
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-item {
+      flex-basis: 280px;
+      /* Base width for each item */
+      flex-shrink: 0;
+      /* Prevent items from shrinking too much */
+      display: flex;
+      flex-direction: column;
+
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .service-icon {
+      width: 80px;
+      /* Size of the icon */
+      height: 80px;
+      margin-bottom: 25px;
+      object-fit: contain;
+    }
+
+    .service-item p {
+      font-size: 17px;
+      line-height: 1.6;
+      max-width: 250px;
+      /* Limit text width for readability */
+    }
+
+    /* Responsive adjustments for Our Services */
+    @media (max-width: 768px) {
+      .our-services-section h2 {
+        font-size: 30px;
+        margin-bottom: 40px;
+      }
+
+      .services-container {
+        gap: 30px;
+      }
+
+      .service-item {
+        flex-basis: 45%;
+        /* Allow two items per row on tablets */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .our-services-section {
+        padding: 60px 15px;
+      }
+
+      .service-item {
+        flex-basis: 90%;
+        /* One item per row on small phones */
+      }
+    }
+
+    /*prmotion*/
+    .promotion {
+      height: 450px;
+    }
+
+    .promotion h2 {
+
+      margin-bottom: 50px;
+      margin-left: 60px;
+      color: #1c3a2c;
+      font-size: 28px;
+      font-weight: 600;
+
+
+    }
+
+    .promo-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 50px;
+      margin-left: 160px;
+      margin-bottom: 60px;
+    }
+
+    .promo-card {
+      position: relative;
+      width: 250px;
+      height: 300px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .promo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .promo-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .promo-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+      transition: background 0.3s;
+    }
+
+    .promo-card:hover .promo-text {
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+    }
+
+    /*customer review*/
+    .customerreview {
+      background-color: #e0d6bb;
+      height: 500px;
+    }
+
+    .customerreview h2 {
+      margin-bottom: 50px;
+      margin-left: 60px;
+      color: #1c3a2c;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .review-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .review-card {
+      width: 320px;
+      height: 300px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #1c3a2c;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-img {
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+    }
+
+    .review-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .review-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .review-content {
+      padding: 15px;
+      text-align: center;
+      color: #f9e4b8;
+    }
+
+    .review-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .review-location {
+      font-size: 13px;
+      color: #f9e4b8;
+      margin-bottom: 8px;
+    }
+
+    .review-stars {
+      color: #FFD700;
+      margin-bottom: 10px;
+    }
+
+    .review-text {
+      font-style: italic;
+      font-size: 14px;
+      color: #e0d6bb;
+    }
+
+    /*footer*/
+
+    footer {
+      background-color: #1c3a2c;
+      color: white;
+      padding: 40px 20px;
+
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .footer-col {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .footer-col h4 {
+      margin-bottom: 15px;
+      color: #15a957;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-col li {
+      margin-bottom: 8px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+/* --- Slide-out Cart Styles (New Additions) --- */
+.slide-cart {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 350px; /* Width of the slide-out cart */
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transform: translateX(100%); /* Start off-screen to the right */
+    transition: transform 0.4s ease-out; /* Smooth slide animation */
+    z-index: 1000; /* Ensure it's above other content */
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-open .slide-cart {
+    transform: translateX(0); /* Slide into view */
+}
+
+.slide-cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #1c3a2c;
+    color: #f8e7c1;
+    border-bottom: 1px solid #ddd;
+}
+
+.slide-cart-header h3 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    color: #f8e7c1;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+}
+
+.close-cart:hover {
+    color: #e0d6bb;
+}
+
+.slide-cart-body {
+    flex-grow: 1; /* Allow body to take up remaining space */
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling for cart items if many */
+    color: #1c3a2c;
+}
+
+.slide-cart-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+.checkout-btn {
+    background-color: #1c3a2c;
+    color: #f8e7c1;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.checkout-btn:hover {
+    background-color: #2f5b43;
+}
+
+/* Optional: Overlay background when cart is open */
+.cart-open body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    z-index: 999; /* Below the cart, above main content */
+}
+
+/* Prevent body scroll when cart is open */
+.cart-open {
+    overflow: hidden;
+}
+
+/* Responsive adjustments for slide-out cart */
+@media (max-width: 480px) {
+    .slide-cart {
+        width: 100%; /* Full width on very small screens */
+    }
+}
+  
+  </style>
+
+  <div class="banner-content">
+    <img src="{% static 'main/photos/covergirl.png' %}" class="side-image" alt="Cover Girl">
+    <div class="banner-text">
+      <h2 data-en="Timeless Elegance, Woven in Tradition" data-mm="အချိန်တိုင်း တန်ဖိုးရှိတဲ့ ရိုးရာအချိတ်">Timeless Elegance, Woven in Tradition</h2>
+      <p data-en="Explore authentic Myanmar traditional costumes that carry the spirit of generations." data-mm="မြန်မာ့အမွေအနှစ်တို့ ထင္ဟပ္ေနေသာ ရိုးရာဝတ္စုံမ်ားကို ရှာေဖွပါ။">Explore authentic Myanmar traditional costumes that carry the spirit of generations.</p>
+      <a href="#browse-section" class="browse-button" data-en="Browse Now" data-mm="ယခုၾကည့္ရႈပါ">Browse Now</a>
+    </div>
+    <img src="{% static 'main/photos/coverboy.png' %}" class="side-image" alt="Cover Boy">
+  </div>
+</section>
+
+<div class="section fade-in" id="wedding-section">
+  <h2 data-en="Wedding Collections" data-mm="မဂၤလာဝတ္စုံ စုစည္းမႈမ်ား">Wedding Collections</h2>
+  <div class="collection-grid">
+    <a class="collection-item" href="bridal.html">
+      <img src="{% static 'main/photos/bride.png' %}" alt="Bridal">
+      <div class="collection-title" data-en="Bridal Wear" data-mm="သတို႔သမီးဝတ္စုံ">Bridal Wear</div>
+    </a>
+    <a class="collection-item" href="bridesmaid.html">
+      <img src="{% static 'main/photos/groom1.png' %}" alt="Groom Wear">
+      <div class="collection-title" data-en="Groom Wear" data-mm="သတို႔သားဝတ္စုံ">Groom Wear</div>
+    </a>
+    <a class="collection-item" href="destination-wedding.html">
+      <img src="{% static 'main/photos/weddingcouple1.png' %}" alt="Couple Sets">
+      <div class="collection-title" data-en="Couple Sets" data-mm="စုံတြဲဝတ္စုံ">Couple Sets</div>
+    </a>
+    <a class="collection-item" href="haldi.html">
+      <img src="{% static 'main/photos/family-removebg-preview.png' %}" alt="Family Sets">
+      <div class="collection-title" data-en="Family Sets" data-mm="မိသားစုဝတ္စုံ">Family Sets</div>
+      <div class="collection-notes" data-en="We prefer the quailty"></div>
+    </a>
+  </div>
+</div>
+
+<section id="browse-section" class="acheik-story-section">
+  <div class="acheik-story-container">
+    <div class="acheik-story-image-card">
+      <img src="{% static 'main/photos/acheik-story.png' %}" alt="Acheik Story Image" class="acheik-story-image" />
+    </div>
+    <div class="acheik-story-content">
+      <h3 data-en="The Story Behind Acheik" data-mm="အချိတ်၏နောက်ကွယ်မှ ဇာတ်လမ်းများ">The Story Behind Acheik</h3>
+      <p data-en="Acheik weaving is a centuries-old art unique to Myanmar. With intricate wave-like patterns and vibrant colors, this fabric has graced royals and modern fashion lovers alike. At Acheik Aura, we bring that legacy to you with a touch of today."
+         data-mm="အချိတ်သည် မြန်မာနိုင်ငံ၏ ရာစုနှစ်ပေါင်းများစွာ ကြာမြင့်ပြီဖြစ်သော ထူးခြားသောအနုပညာတစ်ခု ဖြစ်ပါသည်။ ရှုပ်ထွေးသော လှိုင်းတွန့်ပုံစံများနှင့် တောက်ပသော အရောင်များဖြင့် ဤအထည်သည် မြန်မာ့အမွေအနှစ်ချစ်မြတ်နိုးသူများနှင့် ခေတ်မီဖက်ရှင်နှစ်သက်သူများအားလုံးကို ဆွဲဆောင်နိုင်ပါသည် Acheik Aura သည် ထိုအမွေအနှစ်များကို ခေတ်မီဆန်းသစ်မှုနှင့်အတူ သင့်ထံသို့ ပို့ဆောင်ပေးပါမည်။">Acheik weaving is a centuries-old art unique to Myanmar. With intricate wave-like patterns and vibrant colors, this fabric has graced royals and modern fashion lovers alike. At Acheik Aura, we bring that legacy to you with a touch of today.</p>
+      <a href="{% url 'knowledge' %}" class="knowledge-button" data-en="Learn More In Our Knowledge Page" data-mm="ကျွန်ုပ်တို႔၏ ဗဟုသုတ စာမျက်နှာတွင် ပိုမိုလေ့လာပါ">Learn More In Our Knowledge Page</a>
+    </div>
+  </div>
+</section>
+
+<div class="section fade-in" id="designer-section">
+  <h2 data-en="Shop by Designer" data-mm="ဒီဇိုင္နာအလိုက္ ရှာေဖွပါ">Shop by Designer</h2>
+  <div class="designer-grid">
+    <div class="designer-card" id="md1">
+      <img src="{% static 'main/photos/model3.png' %}" alt="Amulya">
+      <div class="designer-info">
+        <h3 data-en="By Myo Min Soe" data-mm="မ်ိဳးမင္းစိုး၏ လက္ရာများ">By Myo Min Soe</h3>
+        <a class="shop-button" href="amulya.html" data-en="SHOP NOW" data-mm="ယခုဝယ္ယူရန္">SHOP NOW</a>
+      </div>
+    </div>
+    <div class="designer-card" id="md2">
+      <img src="{% static 'main/photos/model2.png' %}" alt="Kritee & Shruti">
+      <div class="designer-info">
+        <h3 data-en="By Mogok Pauk Pauk" data-mm="မိုးကုတ္ေပါက္ေပါက္၏ လက္ရာများ">By Mogok Pauk Pauk</h3>
+        <a class="shop-button" href="kritee-shruti.html" data-en="SHOP NOW" data-mm="ယခုဝယ္ယူရန္">SHOP NOW</a>
+      </div>
+    </div>
+    <div class="designer-card" id="md3">
+      <img src="{% static 'main/photos/model1.png' %}" alt="Bhanushri Gondala">
+      <div class="designer-info">
+        <h3 data-en="By Designer Ma Pont" data-mm="ဒီဇိုင္နာမပုံ႔၏ လက္ရာများ">By Designer Ma Pont</h3>
+        <a class="shop-button" href="bhanushri.html" data-en="SHOP NOW" data-mm="ယခုဝယ္ယူရန္">SHOP NOW</a>
+      </div>
+    </div>
+    <div class="designer-card" id="md4">
+      <img src="{% static 'main/photos/model5.png' %}" alt="Anjali">
+      <div class="designer-info">
+        <h3 data-en="By Designer Kaung Myat" data-mm="ဒီဇိုင္နာေကာင္းျမတ္၏ လက္ရာများ">By Designer Kaung Myat</h3>
+        <a class="shop-button" href="anjali.html" data-en="SHOP NOW" data-mm="ယခုဝယ္ယူရန္">SHOP NOW</a>
+      </div>
+    </div>
+  </div>
+</div >
+
+<section id="acheik-match-section" class="acheik-match-section">
+  <div class="acheik-match-container">
+    <div class="acheik-match-images">
+      <div class="image-circle image-circle-top-left">
+        <img src="{% static 'main/photos/medium_skin.png' %}" alt="Skin Tone 1" class="match-image">
+      </div>
+      <div class="image-circle image-circle-top-right">
+        <img src="{% static 'main/photos/darkskin.png' %}" alt="Skin Tone 2" class="match-image">
+      </div>
+      <div class="image-circle image-circle-bottom">
+        <img src="{% static 'main/photos/fairskin.png' %}" alt="Skin Tone 3" class="match-image">
+      </div>
+    </div>
+    <div class="acheik-match-content">
+      <h2 data-en="Find Your Perfect Acheik Match – For Free!" data-mm="သင်နှင့်လိုက်ဖက်မည့် အချိတ်အရောင်အား ရှာဖွေပါ!">Find Your Perfect Acheik Match <br>– For Free!</h2>
+      <p data-en="Not sure which acheik color complements your skin tone best? Whether you're preparing for a special occasion or just exploring our collections, our analysis helps you choose confidently – so you can wear acheik with grace and pride."
+         data-mm="သင့်အသားအရေနဲ့ လိုက်ဖက်တဲ့ အရောင်ကို မသိသေးဘူးလား။ ဒါဆိုရင်တော့ အသားအရေ စစ်တဲ့ စာမျက်နှာရှိပါတယ်။ ကျွန်တော်တို့စာမျက်နှာက အကောင်းဆုံးနဲ့ အလိုက်ဖက်ဆုံး အရောင်ကိုရွေးချယ်နိုင်ဖို့ ကူညီပေးမှာပါ။">Not sure which acheik color complements your skin tone best? Whether you're preparing for a special occasion or just exploring our collections, our analysis helps you choose confidently – so you can wear acheik with grace and pride.</p>
+      <a href="{% url 'skinanalysis' %}" ><button class="try-it-now-button" data-en="Try it now" data-mm="ယခုစမ္းၾကည့္ပါ">Try it now</button></a>
+    </div>
+  </div>
+</section>
+
+<section class="special">
+  <h2 data-en="Acheik Aura Specials" data-mm="အထူးအချိတ်များ">Acheik Aura Specials</h2>
+  <div class="specials-section">
+    <div class="special-card card1">
+      <img src="{% static 'main/photos/lontayar.jpg' %}" alt="Acheik Classic Sarees">
+      <div class="specialoverlay">
+        <h3 data-en="Luntaya Acheik" data-mm="လွန်းတစ်ရာ အချိတ်">Luntaya Acheik</h3>
+        <a href="{% url 'shop' %}" class="explore-button" data-en="Explore" data-mm="ရှာဖွေပါ">Explore</a>
+      </div>
+    </div>
+
+    <div class="special-card card2">
+      <img src="{% static 'main/photos/cheikgyi.jpg' %}" alt="Modern Acheik Sarees">
+      <div class="specialoverlay">
+        <h3 data-en="Cheik gyi" data-mm="အခ်ိတ္ၾကီး">Cheik gyi</h3>
+        <a href="{% url 'shop' %}" class="explore-button" data-en="Explore" data-mm="ရှာဖွေပါ">Explore</a>
+      </div>
+    </div>
+
+    <div class="special-card card3">
+      <img src="{% static 'main/photos/kachin.jpg' %}" alt="Festive Acheik Sarees">
+      <div class="specialoverlay">
+        <h3 data-en="Traditional cheik" data-mm="ရိုးရာခ်ိတ္">Traditional cheik</h3>
+        <a href="{% url 'shop' %}" class="explore-button" data-en="Explore" data-mm="ရှာဖွေပါ">Explore</a>
+      </div>
+    </div>
+
+    <div class="special-card card4">
+      <img src="{% static 'main/photos/]yearend.jpg' %}" alt="Handwoven Acheik Sarees">
+      <div class="specialoverlay">
+        <h3 data-en="Wedding cheik" data-mm="မဂၤလာခ်ိတ္">Wedding cheik</h3>
+        <a href="{% url 'shop' %}" class="explore-button" data-en="Explore" data-mm="ရှာဖွေပါ">Explore</a>
+      </div>   
+    </div>
+  </div>
+</section>
+
+<section id="our-services-section" class="our-services-section">
+  <h2 data-en="Our services" data-mm="ကျွန်ုပ်တို႔၏ ဝန္ေဆာင္မႈမ်ား">Our services</h2>
+  <div class="services-container">
+    <div class="service-item">
+      <img src="{% static 'main/photos/service-browse.png' %}" alt="Browse Icon" class="service-icon">
+      <p data-en="Browse authentic acheik textiles and ready-to-wear outfits, handwoven with care." data-mm="ကြိက်နှစ်သက်ရာ ရွေးချယ်ဝယ်ယူနိုင်သော စျေးဆိုင်">Browse authentic acheik textiles and ready-to-wear outfits, handwoven with care.</p>
+    </div>
+    <div class="service-item">
+      <img src="{% static 'main/photos/service-design.png' %}" alt="Design Icon" class="service-icon">
+      <p data-en="Choose a fabric and collaborate with expert designers to create your custom look" data-mm="အထည်ရွေးချယ်ပြီးပါက ကြိုက်နှစ်သက်ရာ ဒီဇိုင်နာနှင့် အပ်နိုင်ခြင်း">Choose a fabric and collaborate with expert designers to create your custom look</p>
+    </div>
+    <div class="service-item">
+      <img src="{% static 'main/photos/service-skin.png' %}" alt="Skin Analysis Icon" class="service-icon">
+      <p data-en="Try our free skin tone analysis to discover the colors that suit you best" data-mm="အသားအရေနှင့် အလိုက်ဖက်ဆုံး အရောင်ရွေးချယ်နိုင်သော စစ်ဆေးမှု">Try our free skin tone analysis to discover the colors that suit you best</p>
+    </div>
+  </div>
+</section>
+
+<section class="promotion">
+  <h2 data-en="Seasonal Burmese Promotions" data-mm="ျမန္မာ့ရာသီအလိုက္ လျော့စျေးများ">Seasonal Burmese Promotions</h2>
+  <div class="promo-section">
+    <div class="promo-card">
+      <img src="{% static 'main/photos/thadingyut.jpg' %}" alt="Thadingyut Longyis">
+      <div class="promo-text" data-en="THADINGYUT FESTIVE WEAR" data-mm="သီတင်းကျွတ်ပွဲတော်">THADINGYUT FESTIVE WEAR</div>
+    </div>
+
+    <div class="promo-card">
+      <img src="{% static 'main/photos/thingyan.jpg' %}" alt="Thingyan Dresses">
+      <div class="promo-text" data-en="THINGYAN SPLASH STYLES" data-mm="သင်္ကြန်ပွဲတော်">THINGYAN SPLASH STYLES</div>
+    </div>
+
+    <div class="promo-card">
+      <img src="{% static 'main/photos/tasauntine.jpg' %}" alt="Tazaungdaing Traditional">
+      <div class="promo-text" data-en="TASAUNGTINE TRADITIONS" data-mm="တန်ဆောင်တိုင်ပွဲတော်">TASAUNGTINE TRADITIONS</div>
+    </div>
+
+    <div class="promo-card">
+      <img src="{% static 'main/photos/]yearend.jpg' %}" alt="Handwoven Acheik Sarees">
+      <div class="specialoverlay">
+        <h3 data-en="Wedding cheik" data-mm="မဂၤလာခ်ိတ္">Wedding cheik</h3>
+        <a href="#" class="explore-button" data-en="Explore" data-mm="ရှာေဖွပါ">Explore</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="customerreview">
+  <h2 data-en="Our Customers Speak For Us" data-mm="ကျွန်ုပ်တို႔၏ ေဖာက္သည္မ်ား ေျပာၾကားသည္မွာ">Our Customers Speak For Us</h2>
+
+  <div class="review-section">
+    <div class="review-card">
+      <div class="review-img">
+        <img src="{% static 'main/photos/plain4.png' %}" alt="Acheik Longyi Review">
+      </div>
+      <div class="review-content">
+        <div class="review-name" data-en="Ma Thandar" data-mm="မသႏၱာ">Ma Thandar</div>
+        <div class="review-location" data-en="Yangon, Myanmar" data-mm="ရန္ကုန္၊ ျမန္မာ">Yangon, Myanmar</div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text" data-en="“The acheik fabric is stunning and soft — exactly what I was looking for.”" data-mm="“အချိတ်အထည္များသည် ရင္သပ္ရႈေမာလှပဖွယ်ဖြစ်ၿပီး နူးညံ့ပါတယ္ — ကျွန်ုပ်ရှာေနတာ အတိအကျပါပဲ။”">“The acheik fabric is stunning and soft — exactly what I was looking for.”</div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-img">
+        <img src="{% static 'main/photos/plain (3).png' %}" alt="Customer Feedback">
+      </div>
+      <div class="review-content">
+        <div class="review-name" data-en="Daw Hnin Pwint" data-mm="ေဒါ်နှင်းပွင့်">Daw Hnin Pwint</div>
+        <div class="review-location" data-en="Mandalay, Myanmar" data-mm="မႏၱေလး၊ ျမန္မာ">Mandalay, Myanmar</div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text" data-en="“Traditional designs with modern feel — perfect for Tazaungdaing festival.”" data-mm="“ေခတ္မီဆန္းသစ္မႈႏွင့္ ရိုးရာဒီဇိုင္းမ်ား ေပါင္းစပ္ထားတာ တန္ေဆာင္တိုင္ပြဲေတာ္အတြက္ အေကာင္းဆုံးပါပဲ။”">“Traditional designs with modern feel — perfect for Tazaungdaing festival.”</div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-img">
+        <img src="{% static 'main/photos/plain (1).png' %}" alt="Customer Photo">
+      </div>
+      <div class="review-content">
+        <div class="review-name" data-en="Ko Nay Min" data-mm="ကိုေနမင္း">Ko Nay Min</div>
+        <div class="review-location" data-en="Naypyidaw, Myanmar" data-mm="ေနပြည္ေတာ္၊ ျမန္မာ">Naypyidaw, Myanmar</div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text" data-en="“Received my acheik longyi quickly — color and weave are beautiful.”" data-mm="“အချိတ်လုံခ်ည္ကို အမြန်လက်ခံရရွိပါတယ္ — အရောင်နဲ့ ရက်လုပ်ပုံအရမ်းလှတ။”">“Received my acheik longyi quickly — color and weave are beautiful.”</div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-img">
+        <img src="{% static 'main/photos/plain (2).png' %}" alt="Traditional Dress Feedback">
+      </div>
+      <div class="review-content">
+        <div class="review-name" data-en="Ei Mon Kyaing" data-mm="အိမြန္ၾကိဳင္">Ei Mon Kyaing</div>
+        <div class="review-location" data-en="Singapore" data-mm="စင္ကာပူ">Singapore</div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text" data-en="“Great for cultural events abroad — I love the texture and shine.”" data-mm="“ျပည္ပယဥ္ေက်းမႈပွဲတွေအတြက္ အရမ္းေကာင္းပါတယ္ — အသားအထိအတွေ့နဲ႔ ေတာက္ပမႈကို ၾကိဳက်တယ္။”">“Great for cultural events abroad — I love the texture and shine.”</div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+{% endblock %}

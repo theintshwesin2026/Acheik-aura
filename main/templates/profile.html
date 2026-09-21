@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        .order-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-card {
+    border: 1px solid #d3e8d3;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #f9fff9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: darkgreen;
+}
+
+.order-info p {
+    margin: 2px 0;
+    color: #333;
+}
+
+.order-items ul {
+    padding-left: 20px;
+    color: #444;
+}
+
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <title>My Account</title>
+    <link rel="stylesheet" href="{% static 'main/css/profile.css' %}?v=4">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="profile-container">
+        {% if user.is_authenticated %}
+        <div class="profile-header">
+            <h1>Welcome Back!</h1>
+            <p class="welcome-message">Hi {{ user.username|upper }}, manage your account details here</p>
+        </div>
+
+        <div class="profile-layout">
+            <!-- Sidebar / Profile Card -->
+            <div class="sidebar">
+                <div class="profile-card">
+                    <div class="profile-image-container">
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-img">
+                        <div class="profile-overlay">
+                            <form method="post" enctype="multipart/form-data" action="{% url 'change_profile_picture' %}" class="profile-form">
+                                {% csrf_token %}
+                                <input type="file" name="profile_picture" id="fileInput" style="display:none;" onchange="this.form.submit();">
+                                <button type="button" onclick="document.getElementById('fileInput').click();" class="change-photo-btn">
+                                    <i class="fas fa-camera"></i> Change Photo
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h2>{{ user.username|capfirst }}</h2>
+                        <p class="user-email">{{ user.email }}</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="stat-number" id="wishlistCount">0</span>
+                                <span class="stat-label">Wishlist Items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <button class="action-btn" id="shopBtn">
+                        <i class="fas fa-shopping-bag"></i> Continue Shopping
+                    </button>
+                    <button class="action-btn" id="homeBtn">
+                        <i class="fas fa-home"></i> Go to Home
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Account Details -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-user-circle card-icon"></i>
+                        <h3>Account Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="fas fa-user"></i>
+                                    Username
+                                </div>
+                                <div class="detail-value">{{ user.username|capfirst }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="fas fa-envelope"></i>
+                                    Email
+                                </div>
+                                <div class="detail-value">{{ user.email }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="fas fa-phone"></i>
+                                    Phone Number
+                                </div>
+                                <div class="detail-value">{{ user.phone_number|default:"Not provided" }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Member Since
+                                </div>
+                                <div class="detail-value">{{ user.date_joined|date:"F j, Y" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Address
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-map-marker-alt card-icon"></i>
+                        <h3>Shipping Address</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if user.address %}
+                        <div class="address-content">
+                            <i class="fas fa-home address-icon"></i>
+                            <div class="address-text">
+                                <p>{{ user.address }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-map-marker-alt empty-icon"></i>
+                            <p>No shipping address provided</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div> -->
+
+                <!-- Wishlist -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <i class="fas fa-heart card-icon"></i>
+                        <h3>Wish List</h3>
+                        <span class="wishlist-count" id="wishlistCountHeader">0 items</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="wishlistContainer">
+                            <!-- Wishlist items will be dynamically loaded here -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Order History -->
+<div class="content-card">
+    <div class="card-header">
+        <i class="fas fa-box card-icon"></i>
+        <h3>Order History</h3>
+        <span class="order-count" id="orderCountHeader">0 orders</span>
+    </div>
+    <div class="card-body">
+        <div id="orderHistoryContainer">
+            <!-- Orders will appear here -->
+        </div>
+    </div>
+</div>
+
+                <!-- Logout Button -->
+                <div class="logout-section">
+                    <a href="{% url 'logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="guest-view">
+            <div class="guest-content">
+                <i class="fas fa-user-circle guest-icon"></i>
+                <h2>Join Our Community</h2>
+                <p>Sign in to access your personalized shopping experience</p>
+                <div class="auth-buttons">
+                    <a href="/login" class="auth-btn login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="/register" class="auth-btn signup-btn">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+    // Wishlist functionality for profile page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load and display wishlist items
+        function loadWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const container = document.getElementById('wishlistContainer');
+            const countElement = document.getElementById('wishlistCount');
+            const countHeader = document.getElementById('wishlistCountHeader');
+            
+            // Update counts
+            if (countElement) countElement.textContent = wishlist.length;
+            if (countHeader) countHeader.textContent = `${wishlist.length} items`;
+            
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-heart empty-icon"></i>
+                        <p>Your wishlist is empty</p>
+                        <button class="browse-btn" id="browseBtn">Browse Products</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Build wishlist items
+            let wishlistHTML = '<div class="wishlist-grid">';
+            
+            wishlist.forEach(item => {
+                wishlistHTML += `
+                    <div class="wishlist-item" data-product-id="${item.id}">
+                        <div class="wishlist-image">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.src='{% static 'images/default.jpg' %}'">
+                            <div class="wishlist-actions">
+                                <button class="wishlist-action-btn add-to-cart-btn" title="Add to Cart" data-product-id="${item.id}">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                                <button class="wishlist-action-btn remove-btn" title="Remove from Wishlist" data-product-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="wishlist-details">
+                            <h4>${item.name}</h4>
+                            <p class="product-id">ID: ${item.id}</p>
+                            <div class="price-status">
+                                <span class="price">${item.price}</span>
+                                <span class="status in-stock">In Wishlist</span>
+                            </div>
+                            <p class="added-date">Added: ${new Date(item.added_date).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            wishlistHTML += '</div>';
+            container.innerHTML = wishlistHTML;
+            
+            // Add event listeners
+            addWishlistEventListeners();
+        }
+        
+        // Add event listeners to wishlist buttons
+        function addWishlistEventListeners() {
+            // Remove from wishlist buttons
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    removeFromWishlist(productId);
+                });
+            });
+            
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    addWishlistItemToCart(productId);
+                });
+            });
+        }
+        
+        // Remove item from wishlist
+        function removeFromWishlist(productId) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const itemIndex = wishlist.findIndex(item => item.id === productId);
+            
+            if (itemIndex >= 0) {
+                const itemName = wishlist[itemIndex].name;
+                wishlist.splice(itemIndex, 1);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                
+                // Show message
+                showWishlistMessage(`${itemName} removed from wishlist`, 'removed');
+                
+                // Reload wishlist display
+                loadWishlist();
+            }
+        }
+        
+        // Add wishlist item to cart and navigate to shop page
+        function addWishlistItemToCart(productId) {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const item = wishlist.find(item => item.id === productId);
+            
+            if (item) {
+                let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                
+                // Check if item already in cart
+                const existingItem = cartItems.find(cartItem => cartItem.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cartItems.push({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        image: item.image,
+                        quantity: 1
+                    });
+                }
+                
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                
+                // Store the last added product ID for potential use on shop page
+                localStorage.setItem('lastAddedProduct', productId);
+                
+                // Show success message
+                showWishlistMessage(`${item.name} added to cart`, 'added-to-cart');
+                
+                // Update cart count if function exists
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+                
+                // Navigate to shop page after a brief delay to show the message
+                setTimeout(() => {
+                    window.location.href = "{% url 'shop' %}";
+                }, 800);
+            }
+        }
+        
+        // Show wishlist action message with toast notification
+        function showWishlistMessage(message, type) {
+            // Create a toast notification
+            const toast = document.createElement('div');
+            toast.className = `wishlist-toast wishlist-toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas ${type === 'added-to-cart' ? 'fa-check-circle' : 'fa-trash'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 2500);
+        }
+        
+        // Navigation buttons
+        const shopBtn = document.getElementById('shopBtn');
+        if (shopBtn) {
+            shopBtn.addEventListener('click', function() {
+                window.location.href = "{% url 'shop' %}";
+            });
+        }
+
+        const homeBtn = document.getElementById('homeBtn');
+        if (homeBtn) {
+            homeBtn.addEventListener('click', function() {
+                window.location.href = '/';
+            });
+        }
+
+        const browseBtn = document.getElementById('browseBtn');
+        if (browseBtn) {
+            browseBtn.addEventListener('click', function() {
+                window.location.href = "{% url 'shop' %}";
+            });
+        }
+        
+        // Initialize wishlist on page load
+        loadWishlist();
+    });
+    // -------------------- ORDER HISTORY SECTION --------------------
+function loadOrderHistory() {
+    const orders = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    const container = document.getElementById("orderHistoryContainer");
+    const orderCountHeader = document.getElementById("orderCountHeader");
+
+    if (orderCountHeader) orderCountHeader.textContent = `${orders.length} orders`;
+
+    if (orders.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-box-open empty-icon"></i>
+                <p>No orders found yet.</p>
+            </div>`;
+        return;
+    }
+
+    let html = '<div class="order-history-list">';
+    orders.slice().reverse().forEach((order, index) => {
+        html += `
+        <div class="order-card">
+            <div class="order-header">
+                <h4>Order #${orders.length - index}</h4>
+                <span class="order-date"><i class="fas fa-calendar"></i> ${order.date}</span>
+            </div>
+            <div class="order-info">
+                <p><strong>Name:</strong> ${order.name}</p>
+                <p><strong>Address:</strong> ${order.address}</p>
+                <p><strong>Subtotal:</strong> ${order.subtotal} MMK</p>
+                <p><strong>Shipping:</strong> ${order.shipping} MMK</p>
+                <p><strong>Total:</strong> ${order.total} MMK</p>
+            </div>
+            <div class="order-items">
+                <h5>Items:</h5>
+                <ul>
+                    ${order.items.map(item => `
+                        <li>${item.name} (x${item.quantity})</li>
+                    `).join('')}
+                </ul>
+            </div>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Load orders on page ready
+document.addEventListener("DOMContentLoaded", loadOrderHistory);
+
+    </script>
+</body>
+</html>
+{% endblock %}

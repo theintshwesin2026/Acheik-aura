@@ -1,0 +1,381 @@
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  margin: 0;
+  padding: 0px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+form{
+  padding:0px 20px;
+  margin-left:600px;
+  border-radius: 12px;
+  background-color: transparent;
+  width: 300px;
+}
+
+.registration-container form{
+  padding:0px 20px;
+  margin-left:35px;
+  border-radius: 12px;
+  background-color: transparent;
+  width: 300px;
+}
+form .helptext{
+  display:none;
+}
+ul{
+  display:none;
+}
+h2 {
+  margin-left:5px;
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+}
+
+form p {
+  margin-bottom: 15px;
+}
+
+.registration-container label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #444;
+  display: block;
+  margin-bottom: 3px;
+  margin-right:200px;
+}
+label[for="id_password2"] {
+  font-weight: 600;
+  color: #444;
+  font-size: 14px;
+  display: block;    /* makes it appear on its own line */
+  margin-bottom: 5px;
+  width:165px;
+}
+
+label[for="id_address"] {
+  font-weight: 600;
+  color: #444;
+  font-size: 14px;
+  display: block;    /* makes it appear on its own line */
+  margin-bottom: 5px;
+  width:65px;
+}
+
+label[for="id_email"] {
+  font-weight: 600;
+  color: #444;
+  font-size: 14px;
+  display: block;    /* makes it appear on its own line */
+  margin-bottom: 5px;
+  width:55px;
+}
+label[for="id_password1"] {
+  font-weight: 600;
+  color: #444;
+  font-size: 14px;
+  display: block;    /* makes it appear on its own line */
+  margin-bottom: 5px;
+  width:75px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  width:90%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
+}
+
+.btn{
+    width:75%; 
+    height:48px; 
+    background:#012C19; 
+    border-radius: 8px;
+    box-shadow:0 0 10px black ; 
+    border:none; 
+    cursor:pointer;
+    font-size:16px; 
+    color:#fff; 
+    font-weight: 600;
+
+}
+.form-group i {
+    position:absolute;
+    right: -300px;
+    top:50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color:black;
+
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.login-form {
+  width:100%;
+  margin-left:590px;
+}
+
+.form-group {
+  position: relative;
+  margin:20px; 
+  border-radius: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group i {
+  position: relative;
+  left:10px;
+  margin-left:260px;
+  margin-bottom: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: black;
+}
+
+.forgot-password {
+  margin:0px 105px 10px 110px;
+}
+
+.forgot-password a {
+  color: gray;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.login-btn {
+  background-color: #1C3A2C;
+  color: white;
+  margin-top: 10px; 
+  padding: 12px 125px ;
+  border:12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: lowercase;
+}
+.login-container p {
+    font-size: 14.5px;
+    margin:20px 0 20px 0;
+}
+
+.social-icons a {
+    display:inline-flex;
+    padding:15px; 
+    border:2px solid #ccc ; 
+    border-radius:8px; 
+    font-size:24px; 
+    color:#333; 
+    text-decoration: none;
+    margin:0 8px; 
+}
+
+.login-error {
+  color: red;
+  margin-bottom: 15px;
+}
+
+.newaccount{
+    margin:0px 30px 0 15px;
+}
+
+.newaccount a {
+    font-size:14.5px ; 
+    color:#333; 
+    text-decoration: underline;
+}
+
+.registration-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap:0px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.register-btn {
+  background-color: #1C3A2C;
+  color: white;
+  margin-top: 10px; 
+  padding: 12px 115px ;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.social-divider {
+  margin: 20px 0;
+  position: relative;
+}
+
+.social-divider span {
+  background: transparent;
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.social-divider:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+  z-index: 0;
+}
+
+.error-message {
+  color: red;
+  margin: 5px 0;
+}
+
+#instagram{
+  background: #E1306C;  /* Instagram gradient color */
+  background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D, #F56040, #F77737, #FCAF45, #FFDC80);
+  color: white;
+}
+
+#google { background: #DB4437; }
+#facebook { background: #1877F2; }
+#tiktok{ background: #000000; }
+
+.wrapper {
+  display: inline-flex;
+  list-style: none;
+  height: 70px;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  justify-content: center;
+  margin:0 0 0 0;
+  padding:0px 0px 0px 30px;
+}
+
+.wrapper .icon {
+  position: relative;
+  background: #fff;
+  border-radius: 50%;
+  margin: 0px 35px 0px 5px;
+  width: 50px;
+  height: 43px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow:0 5px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  background: #fff;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 5px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip::before {
+  position: absolute;
+  content: "";
+  height: 8px;
+  width: 8px;
+  background: #fff;
+  bottom: -3px;
+  left: 50%;
+  transform: translate(-50%) rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .icon:hover .tooltip {
+  top: -45px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.wrapper .icon:hover span,
+.wrapper .icon:hover .tooltip {
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper .facebook:hover,
+.wrapper .facebook:hover .tooltip,
+.wrapper .facebook:hover .tooltip::before {
+  background: #1877f2;
+  color: #fff;
+}
+
+.wrapper .twitter:hover,
+.wrapper .twitter:hover .tooltip,
+.wrapper .twitter:hover .tooltip::before {
+  background: #1da1f2;
+  color: #fff;
+}
+
+.wrapper .instagram:hover,
+.wrapper .instagram:hover .tooltip,
+.wrapper .instagram:hover .tooltip::before {
+  background:linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D, #F56040, #F77737, #FCAF45, #FFDC80);
+  color: #fff;
+}
+
+.wrapper .gmail:hover,
+.wrapper .gmail:hover .tooltip,
+.wrapper .gmail:hover .tooltip::before {
+  background:#FF0004;
+  color: #fff;
+}

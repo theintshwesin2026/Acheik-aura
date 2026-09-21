@@ -1,0 +1,658 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f8e7c1 0%, #f5f7fa 100%);
+  margin: 0;
+  padding: 0;
+  color: #333;
+  min-height: 100vh;
+}
+
+.profile-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #1c3a2c 0%, #152a20 100%);
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(138, 79, 125, 0.3);
+}
+
+.profile-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.5em;
+  font-weight: 700;
+}
+
+.welcome-message {
+  margin: 0;
+  font-size: 1.2em;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.profile-image-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid #1c3a2c;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.profile-image-container:hover .profile-img {
+  transform: scale(1.1);
+}
+
+.profile-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(28, 58, 44, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-image-container:hover .profile-overlay {
+  opacity: 1;
+}
+
+.change-photo-btn {
+  background: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: #1c3a2c;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.change-photo-btn:hover {
+  background: #f8e7c1;
+  transform: scale(1.05);
+}
+
+.profile-info h2 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.5em;
+}
+
+.user-email {
+  color: #7f8c8d;
+  margin: 0 0 20px 0;
+  font-size: 0.9em;
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #1c3a2c;
+}
+
+.stat-label {
+  font-size: 0.8em;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.quick-actions h3 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 1.3em;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 12px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  color: #495057;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.action-btn:hover {
+  background:#1c3a2c;
+  color: white;
+  border-color: #1c3a2c;
+  transform: translateX(5px);
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.content-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-3px);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #1c3a2c 0%, #132a1f 100%);
+  color: white;
+  padding: 25px 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.4em;
+  flex: 1;
+}
+
+.card-icon {
+  font-size: 1.5em;
+}
+
+.wishlist-count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.9em;
+}
+
+.card-body {
+  padding: 30px;
+}
+
+/* Detail Grid */
+.detail-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Address Section */
+.address-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.address-icon {
+  font-size: 1.2em;
+  color: #1c3a2c;
+  margin-top: 3px;
+}
+
+.address-text p {
+  margin: 0;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+
+/* Wishlist */
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.wishlist-item {
+  background: #f8f9fa;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.wishlist-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.wishlist-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.wishlist-item:hover .wishlist-image img {
+  transform: scale(1.1);
+}
+
+.wishlist-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wishlist-item:hover .wishlist-actions {
+  opacity: 1;
+}
+
+.wishlist-action-btn {
+  background: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.wishlist-action-btn:hover {
+  background: #1c3a2c;
+  color: white;
+  transform: scale(1.1);
+}
+
+.remove-btn:hover {
+  background: #475e53;
+}
+
+.wishlist-details {
+  padding: 20px;
+}
+
+.wishlist-details h4 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.1em;
+}
+
+.product-id, .product-size {
+  margin: 4px 0;
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.price-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.price {
+  font-weight: 700;
+  color: #1c3a2c;
+  font-size: 1.1em;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.in-stock {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+}
+
+.empty-icon {
+  font-size: 3em;
+  color: #bdc3c7;
+  margin-bottom: 15px;
+}
+
+.empty-state p {
+  margin: 0 0 20px 0;
+  font-size: 1.1em;
+}
+
+.add-address-btn, .browse-btn {
+  background: #1c3a2c;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-address-btn:hover, .browse-btn:hover {
+  background: #1c3a2c;
+  transform: scale(1.05);
+}
+
+/* Logout Section */
+.logout-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background:#597a6b;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #426253;
+  transform: scale(1.05);
+  text-decoration: none;
+  color: white;
+}
+
+/* Guest View */
+.guest-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.guest-content {
+  text-align: center;
+  background: white;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.guest-icon {
+  font-size: 4em;
+  color: #1c3a2c;
+  margin-bottom: 20px;
+}
+
+.guest-content h2 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+}
+
+.guest-content p {
+  color: #7f8c8d;
+  margin-bottom: 30px;
+  font-size: 1.1em;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 25px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  background: #1c3a2c;
+  color: white;
+}
+
+.signup-btn {
+  background: #f8f9fa;
+  color: #495057;
+  border: 2px solid #e9ecef;
+}
+
+.login-btn:hover {
+  background: #1c3a2c;
+  transform: scale(1.05);
+}
+
+.signup-btn:hover {
+  background: #e9ecef;
+  transform: scale(1.05);
+}
+
+/* Toast Notifications */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.wishlist-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #1c3a2c;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    animation: slideInRight 0.3s ease;
+}
+
+.wishlist-toast-removed {
+    background: #475e53;
+}
+
+.wishlist-toast i {
+    font-size: 1.2em;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .sidebar {
+    order: 2;
+  }
+  
+  .main-content {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 15px;
+  }
+  
+  .profile-header h1 {
+    font-size: 2em;
+  }
+  
+  .wishlist-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .auth-buttons {
+    flex-direction: column;
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .card-header {
+    padding: 20px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-image-container {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .profile-header {
+    padding: 20px 15px;
+  }
+  
+  .guest-content {
+    padding: 30px 20px;
+  }
+  
+  .wishlist-toast {
+    right: 10px;
+    left: 10px;
+    text-align: center;
+    justify-content: center;
+  }
+}

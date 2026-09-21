@@ -1,0 +1,167 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/knowledge.css' %}">
+
+<section class="hero-section">
+  <!-- Background image handled via CSS -->
+</section>
+
+<main class="container">
+  <div class="card-grid">
+    <div class="card" onclick="openModal(0)">
+      <img src="{% static 'main/photos/historyofacheik.png' %}" alt="History">
+      <h3 data-en="History of Acheik" data-mm="အချိန်ကာလအတွင်း အချိတ်အဆက်အကြောင်း">History of Acheik</h3>
+    </div>
+    <div class="card" onclick="openModal(1)">
+      <img src="{% static 'main/photos/typesoffabricbb.png' %}" alt="Fabric Types">
+      <h3 data-en="Types of Traditional Fabrics" data-mm="ရိုးရာ အထည်အလိပ် အမျိုးအစားများ">Types of Traditional Fabrics</h3>
+    </div>
+    <div class="card" onclick="openModal(2)">
+      <img src="{% static 'main/photos/symbolism in patterns.png' %}" alt="Meaning">
+      <h3 data-en="Symbolism in Patterns" data-mm="ပုံစံအတွင်း အဓိပ္ပာယ်">Symbolism in Patterns</h3>
+    </div>
+    <div class="card" onclick="openModal(3)">
+      <img src="{% static 'main/photos/howacheikismade.png' %}" alt="How Made">
+      <h3 data-en="How Acheik is Made" data-mm="အချိတ်အပုံစံ ဘယ်လိုလုပ်သည်">How Acheik is Made</h3>
+    </div>
+    <div class="card" onclick="openModal(4)">
+      <img src="{% static 'main/photos/takecare.png' %}" alt="Care">
+      <h3 data-en="Caring for Acheik" data-mm="အချိတ်ကို စောင့်ရှောက်ခြင်း">Caring for Acheik</h3>
+    </div>
+    <div class="card" onclick="openModal(5)">
+      <img src="{% static 'main/photos/didyouknow.png' %}" alt="Facts">
+      <h3 data-en="✨ Did You Know?" data-mm="✨ သင်သိပါသလား?">✨ Did You Know?</h3>
+    </div>
+  </div>
+</main>
+
+<div class="modal" id="infoModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <h2 id="modalTitle">Title</h2>
+    <p id="modalText">Details go here...</p>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('infoModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalText = document.getElementById('modalText');
+
+  const content = [
+    {
+      title: {
+        en: "History of Acheik",
+        mm: "အချိန်ကာလအတွင်း အချိတ်အဆက်အကြောင်း"
+      },
+      text: {
+        en: `In Myanmar, people wear traditional clothes, prominently acheik longyi (skirt) in events such as weddings, novitiation ceremonies, and national gatherings. When you find a lady wearing acheik longyi abroad, she is certainly from Myanmar. Myanmar people regard acheik textiles an important aspect of the identity of the people of Myanmar, representing tradition and practice of a thriving culture.Luntaya acheik is an indispensable item that projects the social status of women. The term lun means shuttle and taya means a hundred. Acheik, on the other hand, means connect, and it is also the term for tapestry weaving methods. So luntaya achiek is a kind of woven cloth with threads crossing under and over each other on plain textile using many shuttles. Acheik textiles have flourished since the nineteenth century CE. During the ancient period, achiek was used for royal costumes; ordinary people were not allowed to wear achiek. The highest ranking officials, royal services, and merchants could only wear achiek if the king rewarded them. Until now, achiek workshops are mainly based in Amarapura, Sagaing, and Mandalay in upper MyanmarFor the weaving process, three of four raw silk threads are twisted tightly with the aid of a machine for tautness and smoothness. After that, silk-woven faces are removed by washing in boiling nut soap liquid. This step helps the fabric become softer than ordinary silk thread. While boiling the silk, colors can be added to dye the thread.`,
+        mm: `မြန်မာနိုင်ငံတွင်လူများသည် ရိုးရာအဝတ်အစားများ၊ အထူးသဖြင့် အချိတ်လုံရည် (အထည်) ကို မင်္ဂလာဆောင်၊ သံဃာဆက်သစ်ပွဲများ၊ အမျိုးသားပွဲများတွင် ဝတ်ဆင်ကြသည်။ ... မြန်မာအချိတ်သည် အမြဲတမ်းထိန်းသိမ်းသည့်အမွေအနှစ်တစ်ခုဖြစ်နေဆဲ ဖြစ်သည်။`
+      }
+    },
+    {
+      title: { en: "Types of Traditional Fabrics", mm: "ရိုးရာ အထည်အလိပ် အမျိုးအစားများ" },
+      text: { 
+        en: `Myanmar boasts a rich tapestry of traditional fabrics, each with unique characteristics and cultural significance. Beyond the famed Acheik, these textiles reflect diverse regional traditions and craftsmanship:
+
+Acheik (Luntaya Acheik): The most iconic Burmese textile, characterized by its intricate wave patterns created using a "hundred shuttle" technique.
+
+Chin Textiles: Bold geometric patterns, earthy tones with bright reds, yellows, blues.
+
+Kachin Textiles: Strong symbolic designs, dark colors with tribal motifs.
+
+Shan Textiles: Plaids, stripes, cotton-based, naturally dyed.
+
+Each of these traditional fabrics tells a unique story, reflecting Myanmar’s cultural heritage.`,
+        mm: `မြန်မာနိုင်ငံတွင် အမျိုးမျိုးသော ရိုးရာ အထည်အလိပ်များ ရှိပြီး၊ မည်သည့်အထည်အလိပ်မျိုးကိုမဆို ယင်း၏ ထူးခြားသည့်လက္ခဏာများနှင့် ယဉ်ကျေးမှုအရေးပါမှုများကို ဖော်ပြသည်။ ... မြန်မာအမျိုးသားအုပ်စုများ၏ စွမ်းရည်များကို သရုပ်ဖော်ပြသည်။`
+      }
+    },
+    {
+      title: { en: "Symbolism in Patterns", mm: "ပုံစံအတွင်း အဓိပ္ပာယ်" },
+      text: { 
+        en: `Acheik patterns are not merely decorative; they hold symbolic meanings:
+
+Wave motifs: Harmony, prosperity, rivers, and life cycles.
+
+Flora & Fauna: Lotus, jasmine, kinnara, chinthe – beauty, purity, protection.
+
+Geometric shapes: Order, balance, stability.
+
+Colors: Red (strength), Green (peace), Gold (royalty), Blue (tranquility).`,
+        mm: `အချိတ်ပုံစံများသည် ဖော်ပြမှုအတွက်သာမက၊ ယဉ်ကျေးမှုနှင့် အဓိပ္ပာယ်ဆိုင်ရာ အနက်ရိပ်များကိုပါ ပါရှိသည်။ ... ယဉ်ကျေးမှုတန်ဖိုးများနှင့် အလှအပ အာရုံခံစားမှုကို ဖော်ပြသည်။`
+      }
+    },
+    {
+      title: { en: "How Acheik is Made", mm: "အချိတ်အပုံစံ ဘယ်လိုလုပ်သည်" },
+      text: { 
+        en: `EN: Creating Acheik fabric is intricate and requires weeks or months.
+
+Thread preparation: Silk threads twisted, dyed, dried.
+
+Loom setup: Luntaya method with many shuttles.
+
+Weaving process: Two weavers operate loom and shuttles.
+
+Time & precision: Only a few inches a day, requires high concentration.`,
+        mm: `အချိတ်အထည်တစ်ခုကို ဖန်တီးခြင်းသည် ကျွမ်းကျင်မှု၊ စိတ်ရှည်မှုနှင့် ရိုးရာကို သက်သေပြသည်။ ... မြန်မာ့ အနုပညာနှင့် ယဉ်ကျေးမှုအမွေအနှစ်ကို ကိုယ်စားပြုသည်။`
+      }
+    },
+    {
+      title: { en: "Caring for Acheik", mm: "အချိတ်ကို စောင့်ရှောက်ခြင်း" },
+      text: { 
+        en: `cheik fabrics are delicate, requiring careful washing, drying, ironing, and storage. Hand-wash only, cold water, air dry in shade, low-heat ironing, and proper storage..`,
+        mm: `အချိတ်အထည်များသည် လှပပြီး နှုတ်ဆက်ရိုးရှင်းသော်လည်း ဂရုစိုက်မှုလိုအပ်ပြီး...`
+      }
+    },
+    {
+      title: { en: "✨ Did You Know?", mm: "✨ သင်သိပါသလား?" },
+      text: { 
+        en: `EN:
+
+Two weavers required for authentic Luntaya Acheik.
+
+Traditionally passed down among women.
+
+Each weaver creates unique “signature waves.”
+
+Historically worn only by royalty and high officials.`,
+        mm: `ရိုးရာ အချိတ်ဆွဲပုံအကြောင်း စိတ်ဝင်စားဖွယ် အချက်အလက်များကို ရှာဖွေပါ။ ...`
+      }
+    }
+  ];
+
+  function openModal(index) {
+    const lang = localStorage.getItem('preferredLang') || 'en';
+    modalTitle.innerText = content[index].title[lang];
+    modalText.innerText = content[index].text[lang];
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  }
+
+  // Language Switching
+  function applyTranslations(lang) {
+    document.body.classList.toggle('lang-mm', lang === 'mm');
+    document.documentElement.classList.toggle('lang-mm', lang === 'mm');
+
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.innerText = lang === 'mm' ? el.dataset.mm : el.dataset.en;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const storedLang = localStorage.getItem('preferredLang') || 'en';
+    applyTranslations(storedLang);
+  });
+</script>
+{% endblock %}

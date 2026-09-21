@@ -1,0 +1,141 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8e7c1;
+}
+
+.cover-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-image: url('../photos/skinanalysis_cover.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.cover-section .overlay {
+  background-color: rgba(28, 58, 44, 0.6);
+  padding: 50px 40px;
+  border-radius: 10px;
+  max-width: 700px;
+}
+
+.cover-section h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.cover-section p {
+  font-size: 18px;
+  margin: 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  background-color: #fffaf0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+}
+
+.slide {
+  display: none;
+  animation: slideIn 0.4s ease-in-out;
+}
+
+.slide.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background-color: #f8e7c1;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid #d1c7a1;
+  transition: 0.3s ease;
+}
+
+.question label:hover {
+  background-color: #f0ddae;
+  transform: translateY(-2px);
+}
+
+.question input[type="radio"] {
+  margin-right: 10px;
+}
+
+.question img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  vertical-align: middle;
+}
+
+button {
+  background-color: #1c3a2c;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 30px auto 0;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2a6048;
+}
+
+.result {
+  display: none;
+  text-align: center;
+  padding: 30px;
+  background-color: #d9e4dd;
+  border-radius: 12px;
+}
+
+.result img {
+  margin-top: 20px;
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+}
+
+.result a {
+  color: #1c3a2c;
+  font-weight: bold;
+  text-decoration: underline;
+}

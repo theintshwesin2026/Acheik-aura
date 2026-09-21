@@ -1,0 +1,590 @@
+.pdarea {
+    display: flex;
+    background-color: #f8e7c1;
+    margin-top: 40px;
+    height: auto;
+}
+
+/* Sidebar */
+.funsidebar {
+    width: 250px;
+    background: #fff;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.funtoggle {
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+
+.filter-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding-left: 5px;
+}
+
+.filter-content.open {
+    max-height: 300px;
+    padding: 5px 0;
+}
+
+/* Availability checkboxes */
+.filter-content label {
+    display: block;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Price */
+.funprice-range {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.funprice-range input {
+    width: 80px;
+    text-align: center;
+}
+
+.funprice-range input[type=range] {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Colors */
+.funcolors {
+    display: grid;
+    grid-template-columns: repeat(6, 25px);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.funcolor-box {
+    width: 25px;
+    height: 25px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border 0.2s;
+}
+
+.funcolor-box:hover {
+    transform: scale(1.1);
+}
+
+.funcolor-box.selected {
+    border: 2px solid #333;
+}
+
+/* Product space */
+.funproducts {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Active Filters Bar */
+.funactive-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.filter-tag {
+    display: flex;
+    align-items: center;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.filter-tag .funcolor-preview {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+}
+
+.filter-tag span {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.funremove-all {
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.sproducts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.spdcard {
+    width: 100%;
+    max-width: 280px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: 0.3s;
+}
+
+.spdcard:hover {
+    transform: translateY(-5px);
+}
+
+/* ============ IMAGE SECTION ============ */
+.spdcard-image {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+}
+
+.spdcard-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.6s ease;
+}
+
+.spdcard-image img.second {
+    opacity: 0;
+}
+
+.spdcard:hover .spdcard-image img.second {
+    opacity: 1;
+}
+
+/* ============ ICONS ============ */
+.spdicons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+}
+
+.spdicons i {
+    background: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.5s ease;
+}
+
+.spdicons .heart {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.spdcard:hover .spdicons .eye {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
+}
+
+/* Heart icon active state */
+.heart-active {
+    color: #e74c3c !important;
+}
+
+.spdicons .heart {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.spdicons .heart:hover {
+    transform: scale(1.1);
+}
+
+/* ============ ADD TO CART BUTTON ============ */
+.spdadd-to-cart {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 30px);
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.5s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.spdcard:hover .spdadd-to-cart {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* ============ CARD INFO ============ */
+.spdcard-info {
+    padding: 12px;
+}
+
+.spdcard-info h4 {
+    margin: 0;
+    font-size: 12px;
+    color: #777;
+    font-weight: bold;
+}
+
+.spdcard-info p {
+    margin: 6px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.spdprice {
+    font-weight: bold;
+    color: #000;
+}
+
+/* ===== MODAL BASE ===== */
+.spdmodal {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    animation: fadeInBg 0.4s ease;
+}
+
+.spdmodal-content {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    width: 80%;
+    max-width: 950px;
+    border-radius: 12px;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    animation: slideIn 0.4s ease;
+    transform-origin: center;
+}
+
+/* LEFT IMAGES SECTION */
+.three {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.big-photo {
+    width: 100%;
+    max-width: 420px;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.detail-images {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.detail-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.2s, border 0.2s;
+}
+
+.detail-images img:hover {
+    transform: scale(1.1);
+    border-color: #006400;
+}
+
+/* RIGHT INFO SECTION */
+.modal-info {
+    flex: 1;
+    margin-top: 10px;
+}
+
+.modal-info h2 {
+    color: #006400;
+    margin-bottom: 10px;
+}
+
+.modal-info p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.spdprice {
+    font-weight: bold;
+    color: #000;
+    font-size: 18px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.spdadd-to-cart {
+    background: #006400;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.spdadd-to-cart:hover {
+    background: #008000;
+}
+
+/* CLOSE ICON */
+.close {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    font-size: 28px;
+    color: #006400;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.close:hover {
+    transform: rotate(90deg);
+    color: #008000;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeInBg {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Wishlist Message */
+.wishlist-message {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    background: #8a4f7d;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: opacity 0.3s, transform 0.3s;
+    max-width: 300px;
+}
+
+/* Dropdown Styles */
+.shop-sub-nav-wrapper {
+    background: linear-gradient(to right, #f9f4f6, #f5eef2, #f9f4f6);
+    padding: 15px 0;
+    border-bottom: 1px solid #f0e1e9;
+}
+
+.shop-sub-navbar ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: -10px;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.shop-sub-navbar li {
+    position: relative;
+    margin: 0 15px;
+}
+
+.shop-sub-navbar a {
+    text-decoration: none;
+    color: #8a4f7d;
+    font-weight: 600;
+    font-size: 18px;
+    transition: color 0.3s ease;
+    padding: 10px 5px;
+    display: block;
+    cursor: pointer;
+}
+
+.shop-sub-navbar a:hover {
+    color: #d8a1c4;
+}
+
+.sdropdown {
+    position: relative;
+}
+
+.sdropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border-radius: 0 0 8px 8px;
+}
+
+.sdropdown.open .sdropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.sdropdown-menu li {
+    margin: 0;
+}
+
+.sdropdown-menu a {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f9f1f6;
+    display: block;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.sdropdown-menu a:hover {
+    background: #fdf9fc;
+}
+
+/* Nested dropdown styles */
+.nested-dropdown {
+    position: relative;
+}
+
+.nested-menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 101;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.4s ease;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border-radius: 0 8px 8px 8px;
+}
+
+.nested-dropdown.open .nested-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.nested-menu a {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f9f1f6;
+    display: block;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.nested-menu a:hover {
+    background: #fdf9fc;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pdarea {
+        flex-direction: column;
+    }
+    
+    .funsidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .sproducts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .spdmodal-content {
+        flex-direction: column;
+        width: 95%;
+    }
+    
+    .shop-sub-navbar ul {
+        flex-direction: column;
+    }
+}

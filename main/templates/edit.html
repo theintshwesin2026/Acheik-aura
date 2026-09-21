@@ -1,0 +1,440 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/product_detail.css' %}">
+
+<div class="container">
+  <!-- Left side -->
+  <div class="left">
+    <div class="cashback-btn">Get 5000 MMK cashback for your first purchase</div>
+    <img src="{% static 'main/photos/orange.jpg' %}" class="big-img" id="mainImage" alt="{{ product.name }}">
+    <div class="thumbnails">
+      <img src="{% static 'main/photos/orange.jpg' %}" onclick="swapImage(this)">
+      <img src="{% static 'main/photos/orange1.png' %}" onclick="swapImage(this)">
+      <img src="{% static 'main/photos/orange2.png' %}" onclick="swapImage(this)">
+    </div>
+  </div>
+
+  <!-- Right side -->
+  <div class="right">
+    <span class="brand">{{ product.brand }}</span>
+    <h2 class="product-title">{{ product.name }}</h2>
+    <p class="price">MMK{{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <button class="size-chart">Size Chart</button>
+
+    <!-- Color Options -->
+    <div class="color-options">
+      <div class="color-circle active" style="background: orange;" onclick="changeColor('orange', this)"></div>
+      <div class="color-circle" style="background: purple;" onclick="changeColor('purple', this)"></div>
+      <div class="color-circle" style="background: navy;" onclick="changeColor('navy', this)"></div>
+      <div class="color-circle" style="background: blue;" onclick="changeColor('blue', this)"></div>
+    </div>
+
+    <!-- Quantity & Cart -->
+    <div class="cart-section">
+      <div class="quantity">
+        <button class="qty-btn" onclick="changeQty(-1)">-</button>
+        <input type="text" id="qty" value="1" readonly>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <button class="add-cart" data-product-id="{{ product.id }}">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- Size Chart Popup -->
+<div id="size-chart-popup" class="popup-overlay">
+  <div class="popup-content">
+    <div class="popup-header">
+      <div class="popup-title">Acheik Aura Size Chart – Fit Guide for All Styles</div>
+      <button class="close-btn">&times;</button>
+    </div>
+    <!-- Size chart tables omitted for brevity -->
+  </div>
+</div>
+
+<script>
+  function swapImage(img) {
+    document.getElementById("mainImage").src = img.src;
+  }
+
+  function changeQty(num) {
+    let qtyInput = document.getElementById("qty");
+    let current = parseInt(qtyInput.value);
+    if (current + num >= 1) qtyInput.value = current + num;
+  }
+
+  function changeColor(color, element) {
+    const mainImage = document.getElementById("mainImage");
+    mainImage.src = "{% static 'main/photos/' %}" + color + ".jpg";
+
+    // Remove active class from all circles
+    document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('active'));
+
+    // Add active class to clicked circle
+    element.classList.add('active');
+  }
+
+  // Popup Controls
+  const sizeChartBtn = document.querySelector('.size-chart');
+  const popupOverlay = document.getElementById('size-chart-popup');
+  const closeBtn = document.querySelector('.close-btn');
+
+  sizeChartBtn.addEventListener('click', () => {
+    popupOverlay.style.display = 'flex';
+  });
+
+  closeBtn.addEventListener('click', () => {
+    popupOverlay.style.display = 'none';
+  });
+
+  popupOverlay.addEventListener('click', e => {
+    if(e.target === popupOverlay) popupOverlay.style.display = 'none';
+  });
+
+  // Add to cart functionality
+  document.querySelector('.add-cart').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    const productId = this.getAttribute('data-product-id');
+    const productName = "{{ product.name }}";
+    const productPrice = "{{ product.price }}";
+    const productImage = document.getElementById('mainImage').src;
+    const productBrand = "{{ product.brand }}";
+    const quantity = parseInt(document.getElementById('qty').value);
+    const selectedColor = document.querySelector('.color-circle.active').style.background;
+    
+    // Get existing cart items from localStorage
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    
+    // Check if product already exists in cart
+    const existingItemIndex = cartItems.findIndex(item => item.id === productId && item.color === selectedColor);
+    
+    if (existingItemIndex >= 0) {
+      // If product exists, increase quantity
+      cartItems[existingItemIndex].quantity += quantity;
+    } else {
+      // If product doesn't exist, add new item
+      cartItems.push({
+        id: productId,
+        name: productName,
+        price: productPrice,
+        image: productImage,
+        brand: productBrand,
+        quantity: quantity,
+        color: selectedColor
+      });
+    }
+    
+    // Save updated cart to localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+    // Update cart count in the header
+    updateCartCount();
+    
+    // Show success message
+    showAddedToCartMessage(productName);
+  });
+  
+  // Function to update cart count in header
+  function updateCartCount() {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+    
+    // Update cart count in header
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    cartCountElements.forEach(element => {
+      element.textContent = totalItems;
+    });
+  }
+  
+  // Function to show "Added to cart" message
+  function showAddedToCartMessage(productName) {
+    // Create message element if it doesn't exist
+    let messageElement = document.querySelector('.cart-message');
+    
+    if (!messageElement) {
+      messageElement = document.createElement('div');
+      messageElement.className = 'cart-message';
+      document.body.appendChild(messageElement);
+    }
+    
+    // Get current language
+    const currentLang = localStorage.getItem('preferredLang') || 'en';
+    
+    // Set message content based on language
+    let messageText;
+    if (currentLang === 'mm') {
+      messageText = `"${productName}" ကို လှည်းထဲသို့ထည့်ပြီးပါပြီ`;
+    } else {
+      messageText = `Added "${productName}" to cart`;
+    }
+    
+    messageElement.innerHTML = `
+      <div style="display: flex; align-items: center;">
+        <span style="margin-right: 10px;">✓</span>
+        <span>${messageText}</span>
+      </div>
+    `;
+    
+    // Show message
+    messageElement.style.opacity = '1';
+    messageElement.style.transform = 'translateX(0)';
+    
+    // Hide message after 3 seconds
+    setTimeout(() => {
+      messageElement.style.opacity = '0';
+      messageElement.style.transform = 'translateX(100px)';
+    }, 3000);
+  }
+</script>
+
+<style>
+  /* All the CSS from the original product detail page goes here */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+  }
+
+  .container {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    gap: 20px;
+  }
+
+  /* Left side images */
+  .left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .cashback-btn {
+    background: #c8e6c9;
+    color: darkgreen;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .big-img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .thumbnails {
+    display: flex;
+    gap: 10px;
+  }
+
+  .thumbnails img {
+    width: 100px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 2px solid transparent;
+  }
+
+  .thumbnails img:hover {
+    border-color: darkgreen;
+  }
+
+  /* Right side details */
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .brand {
+    font-size: 14px;
+    color: gray;
+  }
+
+  .product-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .price {
+    font-size: 20px;
+    font-weight: bold;
+    color: darkgreen;
+  }
+
+  .size-chart {
+    background: none;
+    border: none;
+    color: darkgreen;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+    margin: 10px 0;
+  }
+
+  /* Color Options */
+  .color-options {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .color-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ccc;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .color-circle:hover {
+    transform: scale(1.1);
+  }
+
+  .color-circle.active {
+    border-color: darkgreen;
+    transform: scale(1.2);
+  }
+
+  /* Cart Section */
+  .cart-section {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .quantity {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .quantity input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    outline: none;
+  }
+
+  .qty-btn {
+    background: darkgreen;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .add-cart {
+    padding: 12px;
+    background: darkgreen;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 2;
+  }
+
+  /* Pop-up Styles */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .popup-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    color: #555;
+  }
+
+  /* Cart message styles */
+  .cart-message {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: #8a4f7d;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: opacity 0.3s, transform 0.3s;
+    max-width: 300px;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+    
+    .thumbnails img {
+      width: 80px;
+    }
+    
+    .cart-message {
+      top: 80px;
+      right: 10px;
+      left: 10px;
+      max-width: none;
+    }
+  }
+</style>
+{% endblock %}

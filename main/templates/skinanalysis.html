@@ -1,0 +1,289 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/skinanalysis.css' %}">
+<style>
+  .btn-shop {
+  display: inline-block;
+  background: linear-gradient(135deg, #046108, #056f08);
+  color: white;
+  padding: 10px 25px;
+  font-size: 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-shop:hover {
+  background: linear-gradient(135deg, #43a047, #2e7d32);
+  box-shadow: 0 6px 14px rgba(0, 128, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+</style>
+<section class="cover-section">
+  <div class="overlay">
+    <h2 data-en="Skin Tone Color Analysis" data-mm="အသားအရေ အရောင်ခွဲခြမ်းစိတ်ဖြာမှု">Skin Tone Color Analysis</h2>
+    <p data-en="Discover the most flattering Acheik colors for your skin tone in just a few steps." data-mm="သင့်အသားအရေနှင့် လိုက်ဖက်မည့် အဆင်းအင်္ကျီအရောင်များကို ခြေလှမ်းအနည်းငယ်ဖြင့် ရှာဖွေလိုက်ပါ။">Discover the most flattering Acheik colors for your skin tone in just a few steps.</p>
+  </div>
+</section>
+
+<div class="container">
+  <form id="skinForm">
+    <div class="slide active" id="slide1">
+      <h2 data-en="1. What is your natural skin tone?" data-mm="၁။ သင့်ရဲ့ သဘာဝ အသားအရောင် ဘယ်လိုမျိုးလဲ?">1. What is your natural skin tone?</h2>
+      <div class="question">
+        <label><input type="radio" name="q1" value="cool" required><img src="{% static 'main/photos/fairskin.png' %}"><span data-en="Fair / Light" data-mm="အသားအရောင် ဖြူဖျော့ခြင်း">Fair / Light</span></label>
+        <label><input type="radio" name="q1" value="neutral"><img src="{% static 'main/photos/medium skin.png' %}"><span data-en="Medium / Olive" data-mm="အသားအရောင် ညီညာခြင်း / သံလွင်ရောင်">Medium / Olive</span></label>
+        <label><input type="radio" name="q1" value="warm"><img src="{% static 'main/photos/darkskin.png' %}"><span data-en="Dark / Deep" data-mm="အသားအရောင် နက်မှောင်ခြင်း">Dark / Deep</span></label>
+      </div>
+      <div class="nav-buttons">
+        <button type="button" onclick="validateAndNext(1, 2)"><span data-en="Next" data-mm="နောက်တစ်ခု">Next</span></button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide2">
+      <h2 data-en="2. How does your skin react to the sun?" data-mm="၂။ နေရောင်နှင့် ထိတွေ့ပါက သင့်အရေပြားက ဘယ်လိုတုံ့ပြန်မှုရှိလဲ?">2. How does your skin react to the sun?</h2>
+      <div class="question">
+        <label><input type="radio" name="q2" value="cool" required><img src="{% static 'main/photos/burns easiloy.png' %}"><span data-en="Burns easily" data-mm="လွယ်လွယ်နဲ့ မီးလောင်ခြင်း">Burns easily</span></label>
+        <label><input type="radio" name="q2" value="neutral"><img src="{% static 'main/photos/sometime.png' %}"><span data-en="Burns sometimes, then tans" data-mm="တစ်ခါတစ်ရံ မီးလောင်ပြီး နေရောင်ခြည်ရခြင်း">Burns sometimes, then tans</span></label>
+        <label><input type="radio" name="q2" value="warm"><img src="{% static 'main/photos/tanseasily.png' %}"><span data-en="Tans easily" data-mm="လွယ်လွယ်နဲ့ နေရောင်ခြည်ရခြင်း">Tans easily</span></label>
+      </div>
+      <div class="button-container">
+        <button type="button" onclick="goBack(1,2)" class="btn back"><span data-en="Back" data-mm="နောက်သို့">Back</span></button>
+        <button type="button" onclick="validateAndNext(2, 3)" class="btn next"><span data-en="Next" data-mm="နောက်တစ်ခု">Next</span></button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide3">
+      <h2 data-en="3. What color are the veins on your wrist?" data-mm="၃။ သင့်လက်ကောက်ဝတ်ရှိ သွေးပြန်ကြောများက ဘာအရောင်လဲ?">3. What color are the veins on your wrist?</h2>
+      <div class="question">
+        <label><input type="radio" name="q3" value="cool" required><img src="{% static 'main/photos/cooltone.png' %}"><span data-en="Blue / Purple" data-mm="အပြာ / ခရမ်းရောင်">Blue / Purple</span></label>
+        <label><input type="radio" name="q3" value="warm"><img src="{% static 'main/photos/warm.png' %}"><span data-en="Green" data-mm="အစိမ်းရောင်">Green</span></label>
+        <label><input type="radio" name="q3" value="neutral"><img src="{% static 'main/photos/neutral.png' %}"><span data-en="A mix of both" data-mm="နှစ်မျိုးလုံးရောထားသည်">A mix of both</span></label>
+      </div>
+      <div class="button-container">
+        <button type="button" onclick="goBack(2,3)" class="btn back"><span data-en="Back" data-mm="နောက်သို့">Back</span></button>
+        <button type="button" onclick="validateAndNext(3, 4)" class="btn next"><span data-en="Next" data-mm="နောက်တစ်ခု">Next</span></button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide4">
+      <h2 data-en="4. Which jewelry suits you best?" data-mm="၄။ ဘယ်လိုအဆောင်တွေက သင့်နှင့် ပိုလိုက်ဖက်လဲ?">4. Which jewelry suits you best?</h2>
+      <div class="question">
+        <label><input type="radio" name="q4" value="cool" required><img src="{% static 'main/photos/silver.webp' %}"><span data-en="Silver" data-mm="ငွေရောင်">Silver</span></label>
+        <label><input type="radio" name="q4" value="warm"><img src="{% static 'main/photos/gold.png' %}"><span data-en="Gold" data-mm="ရွှေရောင်">Gold</span></label>
+        <label><input type="radio" name="q4" value="neutral"><img src="{% static 'main/photos/goldandsilver.jpg' %}"><span data-en="Both" data-mm="နှစ်မျိုးလုံး">Both</span></label>
+      </div>
+      <div class="button-container">
+        <button type="button" onclick="goBack(3,4)" class="btn back"><span data-en="Back" data-mm="နောက်သို့">Back</span></button>
+        <button type="button" onclick="validateAndNext(4, 5)" class="btn next"><span data-en="Next" data-mm="နောက်တစ်ခု">Next</span></button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide5">
+      <h2 data-en="5. What color are your eyes?" data-mm="၅။ သင့်မျက်လုံးအရောင်က ဘာလဲ?">5. What color are your eyes?</h2>
+      <div class="question">
+        <label><input type="radio" name="q5" value="cool" required><img src="{% static 'main/photos/blueeye.jpg' %}"><span data-en="Light (blue, green, grey)" data-mm="အရောင်ဖျော့ (အပြာ၊ အစိမ်း၊ မီးခိုးရောင်)">Light (blue, green, grey)</span></label>
+        <label><input type="radio" name="q5" value="warm"><img src="{% static 'main/photos/brown eyes.jpg' %}"><span data-en="Brown / Hazel" data-mm="အညို / လိမ္မော်ရောင်">Brown / Hazel</span></label>
+        <label><input type="radio" name="q5" value="neutral"><img src="{% static 'main/photos/black.jpg' %}"><span data-en="Very dark brown / black" data-mm="အညိုရင့် / အမည်း">Very dark brown / black</span></label>
+      </div>
+      <div class="button-container">
+        <button type="button" onclick="goBack(4,5)" class="btn back"><span data-en="Back" data-mm="နောက်သို့">Back</span></button>
+        <button type="button" onclick="validateAndAnalyze()" class="btn next"><span data-en="See My Color Match" data-mm="အရောင်ကိုကြည့်ရန်">See My Color Match</span></button>
+      </div>
+    </div>
+  </form>
+
+  <div class="result" id="resultBox"></div>
+</div>
+
+<script>
+  // Function to validate current question and move to next slide
+  function validateAndNext(currentSlide, nextSlide) {
+    const currentQuestion = document.querySelector(`#slide${currentSlide} input[name="q${currentSlide}"]:checked`);
+    
+    if (!currentQuestion) {
+      const currentLanguage = localStorage.getItem('language') || 'en';
+      if (currentLanguage === 'en') {
+        alert("Please select an option before continuing.");
+      } else {
+        alert("ကျေးဇူးပြု၍ ရွေးချယ်မှုတစ်ခုကို ရွေးချယ်ပါ။");
+      }
+      return;
+    }
+    
+    nextSlideNumber(nextSlide);
+  }
+  
+  // Function to validate and analyze results
+  function validateAndAnalyze() {
+    const currentQuestion = document.querySelector(`#slide5 input[name="q5"]:checked`);
+    
+    if (!currentQuestion) {
+      const currentLanguage = localStorage.getItem('language') || 'en';
+      if (currentLanguage === 'en') {
+        alert("Please select an option before viewing your results.");
+      } else {
+        alert("ကျေးဇူးပြု၍ သင့်ရလဒ်များကိုကြည့်ရှုခြင်းမပြုမီ ရွေးချယ်မှုတစ်ခုကို ရွေးချယ်ပါ။");
+      }
+      return;
+    }
+    
+    analyzeSkin();
+  }
+  
+  // Function to move to next slide
+  function nextSlideNumber(number) {
+    const current = document.querySelector('.slide.active');
+    const next = document.getElementById('slide' + number);
+    if (current && next) {
+      current.classList.remove('active');
+      next.classList.add('active');
+    }
+  }
+
+  // Function to go back to previous slide
+  function goBack(previousSlide, currentSlide) {
+    const current = document.getElementById('slide' + currentSlide);
+    const prev = document.getElementById('slide' + previousSlide);
+    if (current && prev) {
+      current.classList.remove('active');
+      prev.classList.add('active');
+    }
+  }
+
+  function analyzeSkin() {
+    const form = document.forms["skinForm"];
+    let scores = { cool: 0, warm: 0, neutral: 0 };
+    
+    // Check if all questions are answered
+    for (let i = 1; i <= 5; i++) {
+      const selectedOption = form[`q${i}`].value;
+      if (!selectedOption) {
+        const currentLanguage = localStorage.getItem('language') || 'en';
+        if (currentLanguage === 'en') {
+          alert(`Please answer question ${i} before viewing results.`);
+        } else {
+          alert(`ရလဒ်များကိုကြည့်ရှုခြင်းမပြုမီ မေးခွန်း ${i} ကို ဖြေဆိုပါ။`);
+        }
+        document.querySelector('.slide.active').classList.remove('active');
+        document.getElementById(`slide${i}`).classList.add('active');
+        return;
+      }
+      scores[selectedOption]++;
+    }
+
+    let result = "neutral";
+    if (scores.cool > scores.warm && scores.cool > scores.neutral) result = "cool";
+    else if (scores.warm > scores.cool && scores.warm > scores.neutral) result = "warm";
+
+    const currentLanguage = localStorage.getItem('language') || 'en';
+    let resultText = "";
+    
+    if (result === "cool") {
+      if (currentLanguage === 'en') {
+        resultText = `
+          <h3>You have a Cool Undertone</h3>
+          <p>Best Colors: Lavender, Sky Blue, Emerald, Rose Pink</p>
+          <img src="{% static 'main/photos/cool_collection.png' %}" alt="Cool Acheik" style="width:200px; height:300px;">
+          <a href="{% url 'shop' %}?skintone=cool" class="btn-shop">Cool Collection Shop</a>
+        `;
+      } else {
+        resultText = `
+          <h3>သင့်မှာ အေးမြသော အရောင် သဏ္ဍာန်ရှိပါတယ်</h3>
+          <p>အကောင်းဆုံးအရောင်များ- ပန်းခရမ်း၊ ကောင်းကင်အပြာ၊ မြန်မာကျောက်စိမ်း၊ ပန်းရောင်နှင်းဆီ</p>
+          <p>ကျွန်ုပ်တို့၏တွင် သင့်နှင့်ကိုက်ညီမည့် အဆင်းအင်္ကျီကို ရှာဖွေလိုက်ပါ <a href="#">အေးမြသော အရောင်များ စတိုးဆိုင်</a></p>
+          <img src="{% static 'main/photos/cool_collection.png' %}" alt="Cool Acheik" style="width:200px; height:300px;">
+        `;
+      }
+    } else if (result === "warm") {
+      if (currentLanguage === 'en') {
+        resultText = `
+          <h3>You have a Warm Undertone</h3>
+          <p>Best Colors: Peach, Olive Green, Mustard, Warm Red</p>
+          <img src="{% static 'main/photos/warm_collection.png' %}" alt="Warm Acheik" style="width:200px; height:300px;"> <br><br> 
+
+          <a href="{% url 'shop' %}?skintone=warm" class="btn-shop">Warm Collection Shop</a>
+        `;
+      } else {
+        resultText = `
+          <h3>သင့်မှာ နွေးထွေးသော အရောင် သဏ္ဍာန်ရှိပါတယ်</h3>
+          <p>အကောင်းဆုံးအရောင်များ- မက်မွန်သီး၊ သံလွင်စိမ်း၊ မုန်ညင်းဝါ၊ နွေးသောအနီရောင်</p>
+          <p>ကျွန်ုပ်တို့၏တွင် သင့်နှင့်ကိုက်ညီမည့် အဆင်းအင်္ကျီကို ရှာဖွေလိုက်ပါ <a href="#">နွေးထွေးသော အရောင်များ စတိုးဆိုင်</a></p>
+          <img src="{% static 'main/photos/warm_collection.png' %}" alt="Warm Acheik" style="width:200px; height:300px;"><br><br>
+        `;
+      }
+    } else {
+      if (currentLanguage === 'en') {
+        resultText = `
+          <h3>You have a Neutral Undertone</h3>
+          <p>Best Colors: Cream, Teal, Soft Pink, Burgundy</p>
+          <img src="{% static 'main/photos/neutral_collection.png' %}" alt="Neutral Acheik" style="width:200px; height:300px;"><br><br>
+          <a href="{% url 'shop' %}?skintone=neutral" class="btn-shop">Neutral Collection Shop</a>
+
+        `;
+      } else {
+        resultText = `
+          <h3>သင့်မှာ ကြားနေအရောင် သဏ္ဍာန်ရှိပါတယ်</h3>
+          <p>အကောင်းဆုံးအရောင်များ- မုန့်စိမ်းရောင်၊ စိမ်းပြာရောင်၊ ပန်းနုရောင်၊ စပျစ်ရောင်နီ</p>
+          <p>ကျွန်ုပ်တို့၏တွင် သင့်နှင့်ကိုက်ညီမည့် အဆင်းအင်္ကျီကို ရှာဖွေလိုက်ပါ <a href="#">ကြားနေအရောင်များ စတိုးဆိုင်</a></p>
+          <img src="{% static 'main/photos/neutral_collection.png' %}" alt="Neutral Acheik" style="width:200px; height:300px;">
+        `;
+      }
+    }
+
+    document.querySelector('.slide.active').classList.remove('active');
+    const resultBox = document.getElementById("resultBox");
+    resultBox.style.display = "block";
+    resultBox.innerHTML = resultText;
+  }
+
+  // Language switching functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if language is set in localStorage, default to 'en'
+    const currentLanguage = localStorage.getItem('language') || 'en';
+    changeLanguage(currentLanguage);
+    
+    // Add event listeners to language buttons if they exist
+    const englishBtn = document.getElementById('english-btn');
+    const myanmarBtn = document.getElementById('myanmar-btn');
+    
+    if (englishBtn) {
+      englishBtn.addEventListener('click', function() {
+        changeLanguage('en');
+        localStorage.setItem('language', 'en');
+      });
+    }
+    
+    if (myanmarBtn) {
+      myanmarBtn.addEventListener('click', function() {
+        changeLanguage('mm');
+        localStorage.setItem('language', 'mm');
+      });
+    }
+  });
+
+  function changeLanguage(lang) {
+    // Update all elements with data attributes
+    document.querySelectorAll('[data-en], [data-mm]').forEach(element => {
+      if (lang === 'en' && element.hasAttribute('data-en')) {
+        if (element.tagName === 'INPUT' && element.type === 'button') {
+          element.value = element.getAttribute('data-en');
+        } else {
+          element.textContent = element.getAttribute('data-en');
+        }
+      } else if (lang === 'mm' && element.hasAttribute('data-mm')) {
+        if (element.tagName === 'INPUT' && element.type === 'button') {
+          element.value = element.getAttribute('data-mm');
+        } else {
+          element.textContent = element.getAttribute('data-mm');
+        }
+      }
+    });
+  }
+</script>
+{% endblock %}

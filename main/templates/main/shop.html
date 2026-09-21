@@ -1,0 +1,1562 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'shop.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+.pdarea {
+  display: flex;
+  margin-top: 40px;
+  height: auto;
+  background-color: #f8e7c1;
+  /* ✅ do NOT include overflow hidden here */
+}
+
+
+.funsidebar {
+  width: 250px;
+  background: #f8e7c1;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  position: sticky;
+  top: 200px; /* adjust depending on your header height */
+  height: fit-content;
+  align-self: flex-start;
+  z-index: 10;
+}
+
+
+  .filter-group {
+    margin-bottom: 20px;
+  }
+
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .funtoggle {
+    font-size: 18px;
+    transition: transform 0.3s;
+  }
+
+  .filter-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding-left: 5px;
+  }
+
+  .filter-content.open {
+    max-height: 300px;
+    padding: 5px 0;
+  }
+
+  /* Availability checkboxes */
+  .filter-content label {
+    display: block;
+    margin: 5px 0;
+    font-size: 14px;
+  }
+
+  /* Price */
+  .funprice-range {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .funprice-range input {
+    width: 80px;
+    text-align: center;
+  }
+
+  .funprice-range input[type=range] {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* Colors */
+  .funcolors {
+    display: grid;
+    grid-template-columns: repeat(6, 25px);
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .funcolor-box {
+    width: 25px;
+    height: 25px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border 0.2s;
+  }
+
+  .funcolor-box:hover {
+    transform: scale(1.1);
+  }
+
+  .funcolor-box.selected {
+    border: 2px solid #333;
+  }
+
+  /* Product space */
+  .funproducts {
+    flex: 1;
+    padding: 20px;
+  }
+
+  /* Active Filters Bar */
+  .funactive-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .filter-tag {
+    display: flex;
+    align-items: center;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .filter-tag .funcolor-preview {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .filter-tag span {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .funremove-all {
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .sproducts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .spdcard {
+    width: 100%;
+    max-width: 280px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: 0.3s;
+  }
+
+  .spdcard:hover {
+    transform: translateY(-5px);
+  }
+
+  /* ============ IMAGE SECTION ============ */
+  .spdcard-image {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+  }
+
+  .spdcard-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.6s ease;
+  }
+
+  .spdcard-image img.second {
+    opacity: 0;
+  }
+
+  .spdcard:hover .spdcard-image img.second {
+    opacity: 1;
+  }
+
+  /* ============ ICONS ============ */
+  .spdicons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+  }
+
+  .spdicons i {
+    background: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.5s ease;
+  }
+
+  .spdicons .heart {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .spdcard:hover .spdicons .eye {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
+  }
+
+  /* ============ ADD TO CART BUTTON ============ */
+  .spdadd-to-cart {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 30px);
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.5s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .spdcard:hover .spdadd-to-cart {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* ============ CARD INFO ============ */
+  .spdcard-info {
+    padding: 12px;
+  }
+
+  .spdcard-info h4 {
+    margin: 0;
+    font-size: 12px;
+    color: #777;
+    font-weight: bold;
+  }
+
+  .spdcard-info p {
+    margin: 6px 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .spdprice {
+    font-weight: bold;
+    color: #000;
+  }
+
+  /* Dropdown Styles */
+  .shop-sub-nav-wrapper {
+    background: linear-gradient(to right, #f9f4f6, #f5eef2, #f9f4f6);
+    padding: 15px 0;
+    border-bottom: 1px solid #f0e1e9;
+  }
+
+  .shop-sub-navbar ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+
+  .shop-sub-navbar li {
+    position: relative;
+    margin: 0 15px;
+  }
+
+  .shop-sub-navbar a {
+    text-decoration: none;
+    color: #003c0d;
+    font-weight: 600;
+    font-size: 18px;
+    transition: color 0.3s ease;
+    padding: 10px 5px;
+    display: block;
+    cursor: pointer;
+  }
+
+  .shop-sub-navbar a:hover {
+    color: #d8a1c4;
+  }
+
+  .sdropdown {
+    position: relative;
+  }
+
+  .sdropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .sdropdown.open .sdropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .sdropdown-menu li {
+    margin: 0;
+  }
+
+  .sdropdown-menu a {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f9f1f6;
+    display: block;
+    font-size: 16px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: #003c0d;
+  }
+
+  .sdropdown-menu a:hover {
+    background: #fdf9fc;
+  }
+
+  /* Nested dropdown styles */
+  .nested-dropdown {
+    position: relative;
+  }
+
+  .nested-menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 101;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.4s ease;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border-radius: 0 8px 8px 8px;
+  }
+
+  .nested-dropdown.open .nested-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .nested-menu a {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f9f1f6;
+    display: block;
+    font-size: 16px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: #003c0d;
+  }
+
+  .nested-menu a:hover {
+    background: #fdf9fc;
+  }
+
+  /* Modal Styles */
+  .spdmodal {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    animation: fadeInBg 0.4s ease;
+  }
+
+  .spdmodal-content {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    width: 80%;
+    max-width: 950px;
+    border-radius: 12px;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    animation: slideIn 0.4s ease;
+    transform-origin: center;
+  }
+
+  .three {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .big-photo {
+    width: 100%;
+    max-width: 420px;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .detail-images {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .detail-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.2s, border 0.2s;
+  }
+
+  .detail-images img:hover {
+    transform: scale(1.1);
+    border-color: #006400;
+  }
+
+  .modal-info {
+    flex: 1;
+    margin-top: 10px;
+  }
+
+  .modal-info h2 {
+    color: #006400;
+    margin-bottom: 10px;
+  }
+
+  .modal-info p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  .spdprice {
+    font-weight: bold;
+    color: #000;
+    font-size: 18px;
+  }
+
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+  }
+
+  .spdadd-to-cart {
+    background: #006400;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .spdadd-to-cart:hover {
+    background: #008000;
+  }
+
+  .close {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    font-size: 28px;
+    color: #006400;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .close:hover {
+    transform: rotate(90deg);
+    color: #008000;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes fadeInBg {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Cart and Wishlist Messages */
+  .cart-message, .wishlist-message {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: opacity 0.3s, transform 0.3s;
+    max-width: 300px;
+  }
+
+  .cart-message {
+    background: #162f16;
+    color: white;
+  }
+
+  .wishlist-message {
+    background: #102710;
+    color: #ede9e9;
+  }
+
+  .heart-active {
+    color: #e74c3c !important;
+  }
+
+  .spdicons .heart {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .spdicons .heart:hover {
+    transform: scale(1.1);
+  }
+
+  /* Stock Notifications */
+  .out-of-stock-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #e53935;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 13px;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    pointer-events: none;
+  }
+
+  .stock-notification-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .stock-notification {
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateX(100px);
+    animation: slideIn 0.4s forwards;
+    max-width: 320px;
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideOut {
+    to {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .shop-sub-navbar ul {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .shop-sub-navbar li {
+      margin: 8px 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .sdropdown-menu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      display: none;
+      width: 100%;
+      text-align: center;
+    }
+
+    .sdropdown.open .sdropdown-menu {
+      display: block;
+    }
+
+    .nested-menu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      display: none;
+      width: 100%;
+      text-align: center;
+    }
+
+    .nested-dropdown.open .nested-menu {
+      display: block;
+    }
+.pdarea {
+  display: flex;
+  margin-top: 40px;
+  height: auto;
+  background-color: #f8e7c1;
+  /* ✅ do NOT include overflow hidden here */
+}
+
+
+    .funsidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+  
+</style>
+
+<!-- Navigation Section -->
+<section class="shop-sub-nav-wrapper">
+  <nav class="shop-sub-navbar" aria-label="Shop sub navigation">
+    <ul>
+      {% for category in categories %}
+      <li class="sdropdown">
+        <a href="{% url 'shop_category' category.slug %}" class="dropdown-trigger">
+          {{ category.name }} ▾
+        </a>
+        {% if category.subcategories.all %}
+        <ul class="sdropdown-menu">
+          {% for subcategory in category.subcategories.all %}
+          <li class="nested-dropdown">
+            <a href="{% url 'shop_subcategory' category.slug subcategory.slug %}" class="nested-trigger">
+              {{ subcategory.name }} ▸
+            </a>
+            {% if subcategory.subsubcategories.all %}
+            <ul class="nested-menu">
+              {% for subsub in subcategory.subsubcategories.all %}
+              <li>
+                <a href="{% url 'shop_subsubcategory' category.slug subcategory.slug subsub.slug %}" class="subsub-link" data-subsub="{{ subsub.name }}">
+                  {{ subsub.name }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</section>
+
+<div class="pdarea">
+  <!-- Sidebar -->
+  <div class="funsidebar">
+    <!-- Availability -->
+    <div class="filter-group">
+      <!-- <div class="filter-header" onclick="toggleFilter(this)">
+        <span>Availability</span>
+        <span class="funtoggle">+</span>
+      </div> -->
+      <div class="filter-content">
+        <label><input type="checkbox" value="In Stock" onchange="updateAvailability(this)"> In stock</label>
+        <label><input type="checkbox" value="Out of Stock" onchange="updateAvailability(this)"> Out of stock</label>
+      </div>
+    </div>
+    <!-- Price -->
+    <div class="filter-group">
+      <div class="filter-header" onclick="toggleFilter(this)">
+        <span>Price</span>
+        <span class="funtoggle">+</span>
+      </div>
+      <div class="filter-content">
+        <!-- <input type="range" id="priceRange" min="0" max="158400" value="0" oninput="updatePriceRange()"> -->
+        <div class="funprice-range">
+          <input type="number" id="minPrice" value="0" oninput="updatePriceInputs()">
+          <span>to</span>
+          <input type="number" id="maxPrice" value="158400" oninput="updatePriceInputs()">
+        </div>
+      </div>
+    </div>
+    <!-- Colors -->
+    <div class="filter-group">
+      <div class="filter-header" onclick="toggleFilter(this)">
+        <span>Color</span>
+        <span class="funtoggle">+</span>
+      </div>
+      <div class="filter-content">
+        <div class="funcolors" id="colorOptions">
+          <div class="funcolor-box" style="background:black" data-name="Black"></div>
+          <div class="funcolor-box" style="background:blue" data-name="Blue"></div>
+          <div class="funcolor-box" style="background:brown" data-name="Brown"></div>
+          <div class="funcolor-box" style="background:gold" data-name="Gold"></div>
+          <div class="funcolor-box" style="background:gray" data-name="Gray"></div>
+          <div class="funcolor-box" style="background:green" data-name="Green"></div>
+          <div class="funcolor-box" style="background:pink" data-name="Pink"></div>
+          <div class="funcolor-box" style="background:red" data-name="Red"></div>
+          <div class="funcolor-box" style="background:yellow" data-name="Yellow"></div>
+          <div class="funcolor-box" style="background:purple" data-name="Purple"></div>
+          <div class="funcolor-box" style="background:orange" data-name="Orange"></div>
+          <div class="funcolor-box" style="background:white; border:1px solid #ccc" data-name="White"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Skin Tone -->
+    <div class="filter-group">
+      <div class="filter-header" onclick="toggleFilter(this)">
+        <span>Skin Tone</span>
+        <span class="funtoggle">+</span>
+      </div>
+      <div class="filter-content">
+        <label><input type="checkbox" value="Cool" onchange="updateSkinTone(this)"> Cool</label>
+        <label><input type="checkbox" value="Warm" onchange="updateSkinTone(this)"> Warm</label>
+        <label><input type="checkbox" value="Neutral" onchange="updateSkinTone(this)"> Neutral</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Area -->
+  <div class="funproducts">
+    <!-- Active Filters -->
+    <div class="funactive-filters" id="activeFilters"></div>
+
+    <!-- Products Grid -->
+    <div id="productsGrid" class="sproducts-grid">
+      {% for product in products %}
+      <div class="spdcard" data-id="{{ product.id }}" data-availability="{{ product.availability }}"
+        data-price="{{ product.price }}" data-color="{{ product.color }}" data-skintone="{{ product.skin_tone }}"
+        data-stock="{{ product.stock_quantity }}" data-category="{{ product.category.name }}"
+        data-subcategory="{{ product.subcategory.name }}" data-subsubcategory="{{ product.subsubcategory.name }}">
+        <div class="spdcard-image">
+          {% if product.main_image %}
+          <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="first">
+          {% else %}
+          <img src="{% static 'images/default.jpg' %}" alt="No image available" class="first">
+          {% endif %}
+
+          {% if product.second_image %}
+          <img src="{{ product.second_image.url }}" alt="{{ product.name }} Hover" class="second">
+          {% endif %}
+
+          <div class="spdicons">
+            <i class="fa-regular fa-heart heart" data-product-id="{{ product.id }}"></i>
+            <i class="fa-regular fa-eye eye" onclick="openProductModal('{{ product.id }}')"></i>
+          </div>
+
+          <div class="spdadd-to-cart">Add To Cart</div>
+        </div>
+
+        <div class="spdcard-info">
+          <h4>{{ product.name }}</h4>
+          <p>{{ product.short_description|truncatewords:6 }}</p>
+          <p class="spdprice">MMK{{ product.price }}</p>
+        </div>
+      </div>
+
+      <!-- ========== PRODUCT POPUP MODAL ========== -->
+      <div id="productModal{{ product.id }}" class="spdmodal">
+        <div class="spdmodal-content">
+          <span class="close" onclick="closeProductModal('{{ product.id }}')">&times;</span>
+          <div class="three">
+            <!-- Main Image -->
+            {% if product.main_image %}
+            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="big-photo">
+            {% endif %}
+
+            <!-- Detail Images -->
+            <div class="detail-images">
+              {% if product.detail_image1 %}
+              <img src="{{ product.detail_image1.url }}" alt="Detail 1" class="detail-thumbnail">
+              {% endif %}
+              {% if product.detail_image2 %}
+              <img src="{{ product.detail_image2.url }}" alt="Detail 2" class="detail-thumbnail">
+              {% endif %}
+              {% if product.detail_image3 %}
+              <img src="{{ product.detail_image3.url }}" alt="Detail 3" class="detail-thumbnail">
+              {% endif %}
+            </div>
+          </div>
+          <!-- Product Description -->
+          <div class="modal-info">
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.long_description }}</p>
+            <div class="modal-buttons">
+              <button class="spdadd-to-cart">Add To Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>No products found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Wishlist Message Element -->
+<div class="wishlist-message" style="display: none;"></div>
+
+<script>
+  // Filter functionality
+  const activeFiltersEl = document.getElementById("activeFilters");
+  let filters = {
+    availability: null,
+    price: null,
+    color: null,
+    skintone: null,
+    subsubcategory: null
+  };
+
+  // Initialize page
+  document.addEventListener('DOMContentLoaded', function () {
+    initializeWishlist();
+    applyCartToCards();
+    setupNavigation();
+    setupSubSubCategoryFiltering();
+    
+    // Check for URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tone = urlParams.get("skintone");
+    if (tone) {
+      applySkinToneFromURL(tone);
+    }
+  });
+
+  // ============ DROPDOWN NAVIGATION ============
+  function setupNavigation() {
+    // Handle main dropdown clicks
+    document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const dropdown = this.closest('.sdropdown');
+        const isOpen = dropdown.classList.contains('open');
+        
+        // Close all other dropdowns
+        document.querySelectorAll('.sdropdown').forEach(d => {
+          d.classList.remove('open');
+        });
+        
+        // Toggle current dropdown
+        if (!isOpen) {
+          dropdown.classList.add('open');
+        }
+      });
+    });
+
+    // Handle nested dropdown clicks
+    document.querySelectorAll('.nested-trigger').forEach(trigger => {
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const nestedDropdown = this.closest('.nested-dropdown');
+        const isOpen = nestedDropdown.classList.contains('open');
+        
+        // Close other nested dropdowns in same parent
+        const parent = this.closest('.sdropdown-menu');
+        if (parent) {
+          parent.querySelectorAll('.nested-dropdown').forEach(d => {
+            d.classList.remove('open');
+          });
+        }
+        
+        // Toggle current nested dropdown
+        if (!isOpen) {
+          nestedDropdown.classList.add('open');
+        }
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.sdropdown')) {
+        document.querySelectorAll('.sdropdown, .nested-dropdown').forEach(dropdown => {
+          dropdown.classList.remove('open');
+        });
+      }
+    });
+
+    // Close dropdowns when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.sdropdown, .nested-dropdown').forEach(dropdown => {
+          dropdown.classList.remove('open');
+        });
+      }
+    });
+  }
+
+  // ============ FILTER FUNCTIONALITY ============
+  function toggleFilter(header) {
+    const content = header.nextElementSibling;
+    const toggle = header.querySelector(".funtoggle");
+    content.classList.toggle("open");
+    toggle.textContent = content.classList.contains("open") ? "-" : "+";
+  }
+
+  function applyFilters() {
+    const products = document.querySelectorAll(".spdcard");
+    let visibleCount = 0;
+    
+    products.forEach(product => {
+      let show = true;
+      
+      // Availability filter
+      if (filters.availability) {
+        const availability = product.getAttribute("data-availability");
+        if (availability !== filters.availability) {
+          show = false;
+        }
+      }
+      
+      // Price filter
+      if (filters.price) {
+        const price = parseInt(product.getAttribute("data-price"), 10);
+        const [min, max] = filters.price;
+        if (price < min || price > max) {
+          show = false;
+        }
+      }
+      
+      // Color filter
+      if (filters.color) {
+        const color = product.getAttribute("data-color");
+        if (color !== filters.color.name) {
+          show = false;
+        }
+      }
+      
+      // Skin tone filter
+      if (filters.skintone) {
+        const tone = product.getAttribute("data-skintone");
+        if (tone !== filters.skintone) {
+          show = false;
+        }
+      }
+      
+      // Subsubcategory filter
+      if (filters.subsubcategory) {
+        const subsub = product.getAttribute("data-subsubcategory");
+        if (subsub !== filters.subsubcategory) {
+          show = false;
+        }
+      }
+
+      // Show / hide
+      product.style.display = show ? "block" : "none";
+      if (show) visibleCount++;
+    });
+    
+    // Show message if no products found
+    const productsGrid = document.getElementById("productsGrid");
+    let noProductsMsg = productsGrid.querySelector('.no-products-message');
+    
+    if (visibleCount === 0) {
+      if (!noProductsMsg) {
+        noProductsMsg = document.createElement('p');
+        noProductsMsg.className = 'no-products-message';
+        noProductsMsg.style.textAlign = 'center';
+        noProductsMsg.style.gridColumn = '1 / -1';
+        noProductsMsg.style.padding = '40px 20px';
+        noProductsMsg.style.fontSize = '18px';
+        noProductsMsg.style.color = '#666';
+        productsGrid.appendChild(noProductsMsg);
+      }
+      
+      let filterText = '';
+      if (filters.subsubcategory) {
+        filterText = ` for "${filters.subsubcategory}"`;
+      } else if (filters.availability) {
+        filterText = ` with availability "${filters.availability}"`;
+      } else if (filters.color) {
+        filterText = ` in color "${filters.color.name}"`;
+      } else if (filters.skintone) {
+        filterText = ` for "${filters.skintone}" skin tone`;
+      } else if (filters.price) {
+        filterText = ` in price range MMK${filters.price[0]} - MMK${filters.price[1]}`;
+      }
+      
+      noProductsMsg.textContent = `No products found${filterText}. Try adjusting your filters.`;
+    } else if (noProductsMsg) {
+      noProductsMsg.remove();
+    }
+    
+    renderFilterTags();
+  }
+
+  function renderFilterTags() {
+    activeFiltersEl.innerHTML = "";
+    
+    if (filters.availability) {
+      const tag = document.createElement("div");
+      tag.className = "filter-tag";
+      tag.innerHTML = `${filters.availability} <span onclick="removeFilter('availability')">×</span>`;
+      activeFiltersEl.appendChild(tag);
+    }
+    
+    if (filters.price) {
+      const tag = document.createElement("div");
+      tag.className = "filter-tag";
+      tag.innerHTML = `MMK${filters.price[0]} - MMK${filters.price[1]} <span onclick="removeFilter('price')">×</span>`;
+      activeFiltersEl.appendChild(tag);
+    }
+    
+    if (filters.color) {
+      const tag = document.createElement("div");
+      tag.className = "filter-tag";
+      tag.innerHTML = `<span class="funcolor-preview" style="background:${filters.color.color};"></span> ${filters.color.name} <span onclick="removeFilter('color')">×</span>`;
+      activeFiltersEl.appendChild(tag);
+    }
+    
+    if (filters.skintone) {
+      const tag = document.createElement("div");
+      tag.className = "filter-tag";
+      tag.innerHTML = `${filters.skintone} Skin Tone <span onclick="removeFilter('skintone')">×</span>`;
+      activeFiltersEl.appendChild(tag);
+    }
+    
+    if (filters.subsubcategory) {
+      const tag = document.createElement("div");
+      tag.className = "filter-tag";
+      tag.innerHTML = `${filters.subsubcategory} <span onclick="removeFilter('subsubcategory')">×</span>`;
+      activeFiltersEl.appendChild(tag);
+    }
+
+    const activeCount = Object.values(filters).filter(v => v !== null).length;
+    if (activeCount > 0) {
+      const removeAll = document.createElement("div");
+      removeAll.className = "funremove-all";
+      removeAll.textContent = "Remove All Filters";
+      removeAll.onclick = removeAllFilters;
+      activeFiltersEl.appendChild(removeAll);
+    }
+  }
+
+  function removeAllFilters() {
+    filters = { availability: null, price: null, color: null, skintone: null, subsubcategory: null };
+    
+    // Reset UI elements
+    document.querySelectorAll(".funcolor-box").forEach(c => c.classList.remove("selected"));
+    document.querySelectorAll(".filter-content input[type=checkbox]").forEach(cb => cb.checked = false);
+    document.getElementById("minPrice").value = 0;
+    document.getElementById("maxPrice").value = 158400;
+    document.getElementById("priceRange").value = 0;
+    
+    applyFilters();
+  }
+
+  
+
+  function updateAvailability(checkbox) {
+    if (checkbox.checked) {
+      filters.availability = checkbox.value;
+      document.querySelectorAll(".filter-content input[type=checkbox]").forEach(cb => {
+        if (cb !== checkbox && cb.name === checkbox.name) cb.checked = false;
+      });
+    } else {
+      filters.availability = null;
+    }
+    applyFilters();
+  }
+
+  function updatePriceRange() {
+    const min = parseInt(document.getElementById("minPrice").value) || 0;
+    const max = parseInt(document.getElementById("maxPrice").value) || 999999;
+    filters.price = [min, max];
+    applyFilters();
+  }
+
+  function updatePriceInputs() {
+    let min = parseInt(document.getElementById("minPrice").value) || 0;
+    let max = parseInt(document.getElementById("maxPrice").value) || 999999;
+    if (min > max) {
+      [min, max] = [max, min];
+      document.getElementById("minPrice").value = min;
+      document.getElementById("maxPrice").value = max;
+    }
+    filters.price = [min, max];
+    applyFilters();
+  }
+
+  function updateSkinTone(checkbox) {
+    if (checkbox.checked) {
+      filters.skintone = checkbox.value;
+      document.querySelectorAll(".filter-content input[value='Cool'], .filter-content input[value='Warm'], .filter-content input[value='Neutral']")
+        .forEach(cb => { if (cb !== checkbox) cb.checked = false; });
+    } else {
+      filters.skintone = null;
+    }
+    applyFilters();
+  }
+
+  function applySkinToneFromURL(tone) {
+    filters.skintone = tone.charAt(0).toUpperCase() + tone.slice(1).toLowerCase();
+    
+    document.querySelectorAll('.filter-content input[value="Cool"], .filter-content input[value="Warm"], .filter-content input[value="Neutral"]').forEach(cb => {
+      cb.checked = cb.value.toLowerCase() === tone.toLowerCase();
+    });
+    
+    applyFilters();
+  }
+
+  // Color filter
+  const colors = document.querySelectorAll(".funcolor-box");
+  colors.forEach(c => {
+    c.addEventListener("click", () => {
+      colors.forEach(col => col.classList.remove("selected"));
+      c.classList.add("selected");
+      filters.color = { name: c.dataset.name, color: c.style.backgroundColor || c.style.background };
+      applyFilters();
+    });
+  });
+
+  // Remove single filter
+  function removeFilter(type) {
+    filters[type] = null;
+    
+    if (type === "color") {
+      document.querySelectorAll(".funcolor-box").forEach(c => c.classList.remove("selected"));
+    }
+    
+    if (type === "availability") {
+      document.querySelectorAll(".filter-content input[type=checkbox]").forEach(cb => {
+        if (cb.name === "availability") cb.checked = false;
+      });
+    }
+    
+    if (type === "price") {
+      document.getElementById("minPrice").value = 0;
+      document.getElementById("maxPrice").value = 158400;
+      document.getElementById("priceRange").value = 0;
+    }
+    
+    if (type === "skintone") {
+      document.querySelectorAll(".filter-content input[value='Cool'], .filter-content input[value='Warm'], .filter-content input[value='Neutral']")
+        .forEach(cb => cb.checked = false);
+    }
+    
+    applyFilters();
+  }
+
+  // ============ SUBSURCATEGORY FILTERING ============
+  function setupSubSubCategoryFiltering() {
+    document.querySelectorAll('.subsub-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const subsubName = this.getAttribute('data-subsub');
+        filters.subsubcategory = subsubName;
+        
+        // Close all dropdowns
+        document.querySelectorAll('.sdropdown, .nested-dropdown').forEach(item => {
+          item.classList.remove('open');
+        });
+        
+        applyFilters();
+      });
+    });
+  }
+
+  // ============ MODAL FUNCTIONALITY ============
+  function openProductModal(id) {
+    const modal = document.getElementById("productModal" + id);
+    modal.style.display = "flex";
+  }
+
+  function closeProductModal(id) {
+    const modal = document.getElementById("productModal" + id);
+    modal.style.display = "none";
+  }
+
+  // Close modal by clicking outside
+  window.onclick = function (event) {
+    const modals = document.querySelectorAll('.spdmodal');
+    modals.forEach(m => {
+      if (event.target === m) {
+        m.style.display = "none";
+      }
+    });
+  };
+
+  // ============ WISHLIST FUNCTIONALITY ============
+  function initializeWishlist() {
+    updateWishlistIcons();
+  }
+
+  function updateWishlistIcons() {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const heartIcons = document.querySelectorAll('.spdicons .heart');
+
+    heartIcons.forEach(icon => {
+      const productId = icon.getAttribute('data-product-id');
+      const isInWishlist = wishlist.some(item => item.id === productId);
+
+      if (isInWishlist) {
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid', 'heart-active');
+        icon.style.color = '#e74c3c';
+      } else {
+        icon.classList.remove('fa-solid', 'heart-active');
+        icon.classList.add('fa-regular');
+        icon.style.color = '';
+      }
+    });
+  }
+
+  // Add click event to all heart icons
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('heart') || e.target.closest('.heart')) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const heartIcon = e.target.classList.contains('heart') ? e.target : e.target.closest('.heart');
+      const productCard = heartIcon.closest('.spdcard');
+      const productId = heartIcon.getAttribute('data-product-id');
+      const productName = productCard.querySelector('.spdcard-info h4').textContent.trim();
+      const productPrice = productCard.querySelector('.spdprice').textContent.trim();
+      const productImage = productCard.querySelector('img').src;
+
+      const isAdded = toggleWishlist(productId, productName, productPrice, productImage);
+
+      // Update icon appearance
+      if (isAdded) {
+        heartIcon.classList.remove('fa-regular');
+        heartIcon.classList.add('fa-solid', 'heart-active');
+        heartIcon.style.color = '#e74c3c';
+      } else {
+        heartIcon.classList.remove('fa-solid', 'heart-active');
+        heartIcon.classList.add('fa-regular');
+        heartIcon.style.color = '';
+      }
+    }
+  });
+
+  function toggleWishlist(productId, productName, productPrice, productImage) {
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const existingIndex = wishlist.findIndex(item => item.id === productId);
+
+    if (existingIndex >= 0) {
+      // Remove from wishlist
+      wishlist.splice(existingIndex, 1);
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      showWishlistMessage(`${productName} removed from wishlist`, 'removed');
+      return false;
+    } else {
+      // Add to wishlist
+      wishlist.push({
+        id: productId,
+        name: productName,
+        price: productPrice,
+        image: productImage,
+        added_date: new Date().toISOString()
+      });
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      showWishlistMessage(`${productName} added to wishlist`, 'added');
+      return true;
+    }
+  }
+
+  function showWishlistMessage(message, type) {
+    const messageElement = document.querySelector('.wishlist-message');
+    const currentLang = localStorage.getItem('preferredLang') || 'en';
+
+    let messageText = message;
+    if (currentLang === 'mm') {
+      if (type === 'added') {
+        messageText = `"${message.split(' added')[0]}" ကို စိတ်ကြိုက်စာရင်းထဲသို့ထည့်ပြီးပါပြီ`;
+      } else {
+        messageText = `"${message.split(' removed')[0]}" ကို စိတ်ကြိုက်စာရင်းမှ ဖယ်ရှားပြီးပါပြီ`;
+      }
+    }
+
+    messageElement.innerHTML = `
+      <div style="display:flex;align-items:center;">
+        <span style="margin-right:10px;">${type === 'added' ? '❤️' : '💔'}</span>
+        <span>${messageText}</span>
+      </div>
+    `;
+
+    messageElement.style.display = 'block';
+    messageElement.style.opacity = '1';
+    messageElement.style.transform = 'translateX(0)';
+
+    setTimeout(() => {
+      messageElement.style.opacity = '0';
+      messageElement.style.transform = 'translateX(100px)';
+      setTimeout(() => {
+        messageElement.style.display = 'none';
+      }, 300);
+    }, 3000);
+  }
+
+  // ============ STOCK MANAGEMENT ============
+  function showStockNotification(text, timeout = 3000) {
+    let container = document.querySelector('.stock-notification-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'stock-notification-container';
+      document.body.appendChild(container);
+    }
+
+    const note = document.createElement('div');
+    note.className = 'stock-notification';
+    note.textContent = text;
+
+    container.appendChild(note);
+
+    setTimeout(() => {
+      note.style.animation = 'slideOut 0.4s forwards';
+      setTimeout(() => note.remove(), 400);
+    }, timeout);
+  }
+
+  function parseStockFromCard(card) {
+    const raw = (card.getAttribute('data-stock') || '').trim();
+    const n = parseInt(raw, 10);
+    return Number.isNaN(n) ? 0 : n;
+  }
+
+  function refreshCardStockUI(card) {
+    const stock = parseStockFromCard(card);
+    let label = card.querySelector('.out-of-stock-label');
+    
+    if (stock <= 0) {
+      if (!label) {
+        label = document.createElement('div');
+        label.className = 'out-of-stock-label';
+        label.textContent = 'Out of Stock';
+        const imageWrap = card.querySelector('.spdcard-image') || card;
+        imageWrap.appendChild(label);
+      }
+      
+      const addBtn = card.querySelector('.spdadd-to-cart');
+      if (addBtn) addBtn.style.display = 'none';
+    } else {
+      if (label && label.parentNode) label.parentNode.removeChild(label);
+      const addBtn = card.querySelector('.spdadd-to-cart');
+      if (addBtn) addBtn.style.display = '';
+    }
+  }
+
+  function changeCardStock(card, delta) {
+    let current = parseStockFromCard(card);
+    current = current + delta;
+    if (current < 0) current = 0;
+    card.setAttribute('data-stock', String(current));
+    refreshCardStockUI(card);
+    return current;
+  }
+
+  const CART_KEY = 'acheik_cart_v1';
+  
+  function getCart() {
+    return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+  }
+  
+  function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+  
+  function addToLocalCart(productId) {
+    const cart = getCart();
+    const idx = cart.findIndex(i => i.id === productId);
+    if (idx >= 0) {
+      cart[idx].qty = (cart[idx].qty || 0) + 1;
+    } else {
+      cart.push({ id: productId, qty: 1, added_at: new Date().toISOString() });
+    }
+    saveCart(cart);
+    return cart;
+  }
+  
+  function getQtyInCart(productId) {
+    const cart = getCart();
+    const it = cart.find(i => i.id === productId);
+    return it ? (it.qty || 0) : 0;
+  }
+
+  function applyCartToCards() {
+    document.querySelectorAll('.spdcard').forEach(card => {
+      const pid = card.getAttribute('data-id');
+      const initialStock = parseStockFromCard(card);
+      const qtyInCart = getQtyInCart(pid);
+      
+      if (!card._originalStock) card._originalStock = initialStock;
+      const effective = Math.max(0, card._originalStock - qtyInCart);
+      card.setAttribute('data-stock', String(effective));
+      refreshCardStockUI(card);
+    });
+  }
+
+  // Add to cart functionality
+  document.querySelectorAll('.spdcard').forEach(card => {
+    refreshCardStockUI(card);
+
+    const addBtn = card.querySelector('.spdadd-to-cart');
+    if (!addBtn) return;
+
+    addBtn.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      const pid = card.getAttribute('data-id');
+      let stock = parseStockFromCard(card);
+
+      // If no stock left, show message and block
+      if (stock <= 0) {
+        showStockNotification('This item is out of stock.');
+        refreshCardStockUI(card);
+        return;
+      }
+
+      // Check how many already in cart vs stock
+      const alreadyInCart = getQtyInCart(pid);
+      const originalStock = card._originalStock !== undefined ? card._originalStock : (stock + alreadyInCart);
+      
+      if (alreadyInCart + 1 > originalStock) {
+        showStockNotification('Cannot add more — reached stock limit.');
+        return;
+      }
+
+      // Add to local cart
+      addToLocalCart(pid);
+
+      // Decrement visible stock on card by 1
+      stock = changeCardStock(card, -1);
+
+      // Show notification when stock is low
+      if (stock > 0 && stock <= 5) {
+        showStockNotification(`Only ${stock} item${stock > 1 ? 's' : ''} available`);
+      }
+
+      // If stock reached 0 show out of stock message
+      if (stock <= 0) {
+        showStockNotification('Item now out of stock');
+      }
+    });
+  });
+
+  // Expose helper to restore stock if item removed from cart elsewhere
+  window.restoreStockFromCart = function(productId, qtyRemoved) {
+    const card = document.querySelector(`.spdcard[data-id="${productId}"]`);
+    if (!card) return;
+    
+    changeCardStock(card, +Math.abs(qtyRemoved));
+    
+    const cart = getCart();
+    const idx = cart.findIndex(i => i.id === productId);
+    if (idx >= 0) {
+      cart[idx].qty = Math.max(0, (cart[idx].qty || 0) - qtyRemoved);
+      if (cart[idx].qty === 0) cart.splice(idx, 1);
+      saveCart(cart);
+    }
+  };
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // When clicking a detail image inside the modal
+  document.querySelectorAll(".detail-thumbnail").forEach(thumbnail => {
+    thumbnail.addEventListener("click", function () {
+      // Find the modal this thumbnail belongs to
+      const modal = this.closest(".spdmodal");
+      const bigPhoto = modal.querySelector(".big-photo");
+
+      // Change main photo
+      bigPhoto.src = this.src;
+
+      // Highlight the selected thumbnail
+      modal.querySelectorAll(".detail-thumbnail").forEach(img => img.classList.remove("active"));
+      this.classList.add("active");
+    });
+  });
+});
+</script>
+{% endblock %}

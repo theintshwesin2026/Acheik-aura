@@ -1,0 +1,1027 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+
+{% load static %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    .container {
+        display: flex;
+        width: 100%;
+        margin-top: 10px;
+        color: darkgreen;
+    }
+
+    .delivery-frame {
+        width: 100%;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-right: 20px;
+        height: 100%;
+    }
+
+    .checkout-container {
+        display: flex;
+        width: 100%;
+    }
+
+    .checkout-form {
+        display: flex;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .checkout-frame,
+    .voucher-details {
+        width: 100%;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-right: 10px;
+    }
+
+    .checkout-frame {
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .voucher-details {
+        overflow-y: hidden;
+        overflow-x: scroll;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+        color: darkgreen;
+    }
+
+    p {
+        color: #888;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: darkgreen;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid yellowgreen;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .optional {
+        color: #888;
+        font-size: 12px;
+        display: inline;
+    }
+
+    .account {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .account-email {
+        font-size: 16px;
+        display: flex;
+        width: 100%;
+    }
+
+    .account-email input {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown button {
+        background-color: rgba(153, 205, 50, 0.759);
+        border: none;
+        border-radius: 4px;
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 100px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 0;
+        right: 0;
+    }
+
+    .dropdown-content a {
+        color: rgb(5, 75, 5);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: rgba(153, 205, 50, 0.759);
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .saved-address {
+        color: rgb(5, 75, 5);
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+    }
+
+    .saved-address:hover {
+        text-decoration: underline;
+    }
+
+    /* Payment section */
+    .payment-method {
+        margin-bottom: 15px;
+    }
+
+    .payment-option {
+        border: 1px solid yellowgreen;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .payment-option:hover {
+        border-color: darkgreen;
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        accent-color: yellowgreen;
+    }
+
+    .payment-option.active {
+        border-color: rgba(0, 100, 0, 0.644);
+        background-color: yellowgreen;
+    }
+
+    .payment-details {
+        display: none;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+        border-top: 1px solid darkgreen;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .payment-option.active .payment-details {
+        display: block;
+    }
+
+    .shipping-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .shipping-option:hover {
+        background-color: #a6d6a6;
+    }
+
+    .shipping-option.selected {
+        border-color: #a6d6a6;
+        background-color: #a6d6a6;
+    }
+
+    .shipping-option.selected:hover {
+        background-color: #e5f5e5;
+    }
+
+    .shipping-option.selected .shipping-price {
+        color: green;
+        font-weight: bold;
+        background-color: #a6d6a6;
+    }
+
+    .shipping-name {
+        font-size: 16px;
+    }
+
+    .shipping-price {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .complete button {
+        background-color: rgb(8, 71, 8);
+        color: white;
+        padding: 20px;
+        width: 70%;
+        font-size: 23px;
+        border-radius: 20px;
+        margin-left: 80px;
+    }
+
+    .voucher-item {
+        display: flex;
+        justify-content: space-around;
+        gap: 30px;
+        width: 450px;
+        height: 70px;
+        align-items: center;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    .voucher-item img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+
+    .voucher-item-details {
+        display: flex;
+        align-items: center;
+        width: 450px;
+        height: 70px;
+    }
+
+    .voucher-total {
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .checkout-summary {
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+
+    .apply-discount {
+        display: flex;
+        width: 450px;
+        gap: 50px;
+    }
+
+    .apply-discount input {
+        padding: 10px;
+    }
+
+    .apply-discount button {
+        background-color: #d5006d;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100px;
+    }
+
+    .apply-discount button:hover {
+        background-color: #c51162;
+    }
+
+    button a {
+        text-decoration: none;
+        color: white;
+        display: block;
+    }
+
+    button:hover {
+        background-color: greenyellow;
+    }
+</style>
+<style>
+    /* Container for all voucher items */
+    #voucherContent {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    /* Each product row */
+    .voucher-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        padding: 8px 0;
+    }
+
+    /* Left section: image + name */
+    .voucher-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    /* Product image */
+    .voucher-item img {
+        width: 55px;
+        height: 55px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    /* Product name text */
+    .voucher-name {
+        font-size: 15px;
+        color: #222;
+        font-weight: 500;
+    }
+
+    /* Price */
+    .voucher-price {
+        font-size: 15px;
+        color: #000;
+        width: 80px;
+        text-align: right;
+    }
+
+    /* Currency */
+    .voucher-currency {
+        font-size: 14px;
+        color: #222;
+        margin-left: 5px;
+    }
+
+    /* Delete button */
+    .voucher-remove {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #000;
+        font-size: 18px;
+        margin-left: 10px;
+        transition: color 0.2s ease;
+    }
+
+    .voucher-remove:hover {
+        color: #e60000;
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 480px) {
+        .voucher-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .voucher-price {
+            text-align: left;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="delivery-frame">
+            <h1>Account</h1>
+            <form method="POST" id="placeOrderUrl" action="{% url 'place_order' %}">
+                {% csrf_token %}
+                <div class="account">
+                    <div class="account-email">
+                        <input type="email" placeholder="Enter your email">
+                        <div class="dropdown">
+                            <button>&#9660;</button>
+                            <div class="dropdown-content">
+                                <a href="{% url 'home' %}">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Delivery</h2>
+
+                <div class="input-group">
+                    <label for="country">Country/Region</label>
+                    <select id="country" name="country" required>
+                        <option value="Myanmar (Burma)">Myanmar (Burma)</option>
+                        <option value="Thailand">Thailand</option>
+                        <option value="Singapore">Singapore</option>
+                        <option value="Malaysia">Malaysia</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="customer_address">Address:</label>
+                    <input type="text" id="customer_address" name="customer_address" required>
+                </div>
+                <div class="input-group">
+                    <label for="customer_city">City:</label>
+                    <input type="text" id="customer_city" name="customer_city" required>
+                </div>
+                <div class="input-group">
+                    <label for="customer_phone">Phone Number:</label>
+                    <input type="text" id="customer_phone" name="customer_phone" required>
+                </div>
+
+                <div class="payment-method">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="cod" onclick="togglePaymentDetails('cod')">
+                        Cash on Delivery (COD)
+                    </label>
+
+                    <div id="cod-details" class="payment-details">
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" value="mdy_car_gate" data-fee="1500">
+                                Mdy Car Gate
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 1,500.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" value="mdy_kya_gate" data-fee="1500">
+                                မန္တလေးမြို့တွင်း
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 1,500.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" value="ygn_car_gate" data-fee="2000">
+                                Ygn Car Gate
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 2,000.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="3000">
+                                တရုတ်ကားဂိတ်
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 3,000.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="3000">
+                                ရမည်းသင်း
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 3,000.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="3500">
+                                Pyin Oo Lwin
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 3,500.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="3500">
+                                မော်လမြိုင်
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 3,500.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="3500">
+                                တောင်ကြီး
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 3,500.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="3500">
+                                မြေပုံသာ
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 3,500.00</div>
+                        </div>
+
+                        <div class="shipping-option">
+                            <div class="shipping-name">
+                                <input type="radio" name="shipping" data-fee="40000">
+                                ပုသိမ်
+                            </div>
+                            <div class="shipping-price" id="shipping-price">K 4,000.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-method">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="bank" onclick="togglePaymentDetails('bank')">
+                        Bank Transfer
+                    </label>
+                    <div id="bank-details" class="payment-details">
+                        အောက်မှာပါတဲ့ Bank account တွေကိုငွေလွှဲပြီးသွားရင်အကြောင်းကြားပေးပါ။
+                        _____________________________________
+                        KBZ Pay <br>
+                        09257669988<br>
+                        Mg Hein Thiha<br>
+                        -----<br>
+                        <br>
+                        KBZ Bank<br>
+                        2903 0129 0002 78302<br>
+                        Hein Thiha<br>
+                        -----<br>
+                        AYA bank<br>
+                        Heinthiha<br>
+                        200 144 61 566<br>
+                        -----<br>
+                        CB bank<br>
+                        0033 6005 0005 2388<br>
+                        Thinthiri Bon<br>
+                        -----<br>
+                        Wave Pay<br>
+                        09257669988<br>
+                        pw- 669988<br>
+                        Kay Khain Win<br>
+                        -----<br>
+                        YOMA Bank-<br>
+                        004110180008539<br>
+                        Theint Shwe Sin<br>
+                        -------<br>
+                        KBZ Pay<br>
+                        09257099992<br>
+                        Thin Thiri Bon<br>
+                    </div>
+                </div>
+
+        </div>
+
+        <div class="checkout-container">
+            <!-- Checkout Frame -->
+            <div class="checkout-frame">
+                <div class="checkout-summary">
+                    <h1>Your Voucher</h1>
+                    <div class="checkout-item">
+                        <div id="voucherContent" class="checkoutvouncher"></div>
+                        <h3>Subtotal: MMK &nbsp;<span id="voucherSubtotal" name="voucherSubtotal"></span></h3>
+                        <h3>Delivery fee: <span id="voucherShipping" name="voucherShipping"></span></h3>
+                        <h3>Designer fee: <span name="designerfee"></span></h3>
+
+                        <h3>Total: <span id="voucherTotal" name="voucherTotal"></span></h3>
+                    </div>
+                </div>
+                <div class="complete">
+                    <button type="submit">Complete order</button>
+                </div>
+            </div>
+        </div>
+
+        </form>
+    </div>
+
+    <script>
+        // ---- Payment Method Toggle ----
+        function togglePaymentDetails(selectedOption) {
+            document.getElementById('cod-details').style.display = 'none';
+            document.getElementById('bank-details').style.display = 'none';
+
+            const options = document.querySelectorAll('.payment-option');
+            options.forEach(option => option.classList.remove('active'));
+
+            if (selectedOption === 'cod') {
+                document.getElementById('cod-details').style.display = 'block';
+                options[0].classList.add('active');
+            } else if (selectedOption === 'bank') {
+                document.getElementById('bank-details').style.display = 'block';
+                options[1].classList.add('active');
+            }
+
+            // Store selected payment method in localStorage for later reference
+            localStorage.setItem('selectedPaymentMethod', selectedOption);
+
+            // If payment method = bank, reset shipping fee to 0
+            if (selectedOption === 'bank') {
+                updateSummaryWithFee(0);
+                localStorage.setItem('selectedShippingFee', 0);
+            } else {
+                // reapply previously chosen shipping fee if any
+                const fee = parseFloat(localStorage.getItem('selectedShippingFee')) || 0;
+                updateSummaryWithFee(fee);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const shippingOptions = document.querySelectorAll('.shipping-option');
+            const shippingRadios = document.querySelectorAll('input[name="shipping"]');
+            const shippingFeeElement = document.getElementById('voucherShipping');
+            const subtotalElement = document.getElementById('voucherSubtotal');
+            const totalElement = document.getElementById('voucherTotal');
+            const checkoutForm = document.getElementById('placeOrderUrl');
+
+            // --- helper: parse number like "K 1,500" or "1500" ---
+            function parseNumberFromString(str) {
+                if (!str) return 0;
+                const cleaned = str.replace(/[^\d.,-]/g, '').replace(/,/g, '');
+                const num = parseFloat(cleaned);
+                return isNaN(num) ? 0 : num;
+            }
+
+            // --- get subtotal safely ---
+            let subtotal = 0;
+            if (subtotalElement) {
+                subtotal = parseNumberFromString(subtotalElement.textContent || subtotalElement.innerText);
+            }
+            // --- get designer fee from localStorage ---
+            function getDesignerFee() {
+                return parseFloat(localStorage.getItem('designerTotalFee')) || 0;
+            }
+            // --- update summary function ---
+            window.updateSummaryWithFee = function (fee) {
+                if (!shippingFeeElement || !totalElement) return;
+                // 🧾 Get latest subtotal & designer fee
+                subtotal = parseNumberFromString(subtotalElement.textContent || subtotalElement.innerText);
+                const designerFee = getDesignerFee();
+                // Check payment method
+                const selectedPayment = localStorage.getItem('selectedPaymentMethod');
+
+                // If bank transfer → force fee = 0
+                if (selectedPayment === 'bank') {
+                    fee = 0;
+                }
+                // 🧮 Calculate total = subtotal + shipping + designer fee
+                const total = subtotal + fee + designerFee;
+
+                shippingFeeElement.textContent = fee.toLocaleString();
+                totalElement.textContent = total.toLocaleString();
+
+                // ✅ Optional: store updated values
+                localStorage.setItem('selectedShippingFee', fee);
+                localStorage.setItem('calculatedTotal', total);
+            };
+
+            // --- default values ---
+            updateSummaryWithFee(0);
+            localStorage.setItem('selectedShippingMethod', '');
+            localStorage.setItem('selectedShippingFee', 0);
+            localStorage.setItem('selectedPaymentMethod', ''); // none initially
+
+            // --- selection handler ---
+            shippingOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    const radio = this.querySelector('input[type="radio"][name="shipping"]');
+                    if (!radio) return;
+
+                    const alreadySelected = radio.checked;
+                    // If already selected, unselect it and reset to 0
+                    if (alreadySelected) {
+                        radio.checked = false;
+                        this.classList.remove('selected');
+                        updateSummaryWithFee(0);
+                        localStorage.setItem('selectedShippingMethod', '');
+                        localStorage.setItem('selectedShippingFee', 0);
+                        removeHiddenInputs();
+                        return;
+                    }
+
+                    // Unselect all others
+                    shippingOptions.forEach(o => o.classList.remove('selected'));
+                    shippingRadios.forEach(r => (r.checked = false));
+
+                    // Select this one
+                    radio.checked = true;
+                    this.classList.add('selected');
+
+                    // Get fee
+                    let fee = parseNumberFromString(radio.dataset.fee);
+                    if (!fee) {
+                        const priceEl = this.querySelector('.shipping-price');
+                        fee = parseNumberFromString(priceEl?.textContent || priceEl?.innerText);
+                    }
+
+                    if (isNaN(fee)) fee = 0;
+
+                    // If payment = bank, ignore fee
+                    const selectedPayment = localStorage.getItem('selectedPaymentMethod');
+                    if (selectedPayment === 'bank') {
+                        fee = 0;
+                    }
+
+                    updateSummaryWithFee(fee);
+
+                    // Save locally
+                    localStorage.setItem('selectedShippingMethod', radio.value || '');
+                    localStorage.setItem('selectedShippingFee', fee);
+
+                    // Update form inputs
+                    updateHiddenInputs(radio.value, fee);
+                });
+            });
+
+            // --- hidden input helpers ---
+            function updateHiddenInputs(method, fee) {
+                if (!checkoutForm) return;
+                removeHiddenInputs();
+
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = 'shipping_method';
+                methodInput.value = method;
+                checkoutForm.appendChild(methodInput);
+
+                const feeInput = document.createElement('input');
+                feeInput.type = 'hidden';
+                feeInput.name = 'shipping_fee';
+                feeInput.value = fee;
+                checkoutForm.appendChild(feeInput);
+            }
+
+            function removeHiddenInputs() {
+                if (!checkoutForm) return;
+                checkoutForm.querySelectorAll('input[name="shipping_method"], input[name="shipping_fee"]').forEach(el => el.remove());
+            }
+
+            // --- recalc if subtotal changes dynamically ---
+            if (subtotalElement) {
+                const mo = new MutationObserver(() => {
+                    subtotal = parseNumberFromString(subtotalElement.textContent || subtotalElement.innerText);
+                    const selectedRadio = document.querySelector('input[name="shipping"]:checked');
+                    let fee = 0;
+                    if (selectedRadio) {
+                        fee = parseNumberFromString(selectedRadio.dataset.fee);
+                        if (!fee) {
+                            const priceEl = selectedRadio.closest('.shipping-option')?.querySelector('.shipping-price');
+                            fee = parseNumberFromString(priceEl?.textContent || priceEl?.innerText);
+                        }
+                    }
+                    updateSummaryWithFee(fee || 0);
+                });
+                mo.observe(subtotalElement, { childList: true, characterData: true, subtree: true });
+            }
+            
+            // --- also update when designer fee changes in localStorage ---
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'designerTotalFee') {
+                    const selectedRadio = document.querySelector('input[name="shipping"]:checked');
+                    let fee = 0;
+                    if (selectedRadio) {
+                        fee = parseNumberFromString(selectedRadio.dataset.fee);
+                    }
+                    updateSummaryWithFee(fee || 0);
+                }
+            });
+
+            // --- ensure form submission includes latest selection ---
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function () {
+                    const shippingMethod = localStorage.getItem('selectedShippingMethod') || '';
+                    let shippingFee = parseFloat(localStorage.getItem('selectedShippingFee')) || 0;
+
+                    const selectedPayment = localStorage.getItem('selectedPaymentMethod');
+                    if (selectedPayment === 'bank') {
+                        shippingFee = 0; // no fee if bank transfer
+                    }
+
+                    updateHiddenInputs(shippingMethod, shippingFee);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const voucherContent = document.getElementById('voucherContent');
+            const voucherSubtotal = document.getElementById('voucherSubtotal');
+            const voucherShipping = document.getElementById('voucherShipping');
+            const voucherTotal = document.getElementById('voucherTotal');
+            const designerFeeEl = document.querySelector('[name="designerfee"]');
+
+            // 💡 Function to render voucher items & totals
+            function renderVoucherItems() {
+                const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                const designerFee = parseFloat(localStorage.getItem('designerTotalFee')) || 0;
+
+                // Reset if empty
+                if (cartItems.length === 0) {
+                    voucherContent.innerHTML = `
+                <p data-en="Your cart is empty." data-mm="သင်၏လှည်းဗလာဖြစ်နေပါသည်။">Your cart is empty.</p>`;
+                    voucherSubtotal.textContent = '0.00';
+                    voucherShipping.textContent = '0.00';
+                    designerFeeEl.textContent = designerFee.toFixed(2);
+                    voucherTotal.textContent = designerFee.toFixed(2);
+                    return;
+                }
+
+                let subtotal = 0;
+                let html = '';
+
+                cartItems.forEach(item => {
+                    const price = parseFloat(String(item.price).replace(/[^0-9.]/g, "")) || 0;
+                    const itemTotal = price * item.quantity;
+                    subtotal += itemTotal;
+
+                    html += `
+                <div class="voucher-item" data-product-id="${item.id}">
+                    <div class="voucher-left">
+                        <img src="${item.image}" alt="${item.name}">
+                        <span class="voucher-name">${item.name} (x${item.quantity})</span>
+                    </div>
+                    <div class="voucher-price">${itemTotal.toFixed(2)}</div>
+                    <span class="voucher-currency">MMK</span>
+                </div>
+            `;
+                });
+
+                voucherContent.innerHTML = html;
+
+                // Shipping fee logic
+                const shippingFee = subtotal > 50000 ? 0 : 2000;
+
+                // Update display
+                voucherSubtotal.textContent = subtotal.toFixed(2);
+                voucherShipping.textContent = shippingFee.toFixed(2);
+                designerFeeEl.textContent = designerFee.toFixed(2);
+
+                const total = subtotal + shippingFee + designerFee;
+                voucherTotal.textContent = total.toFixed(2);
+            }
+
+            // Initial render
+            renderVoucherItems();
+
+            // 🔄 Update dynamically when localStorage changes
+            window.addEventListener('storage', (e) => {
+                if (['cartItems', 'designerTotalFee'].includes(e.key)) {
+                    renderVoucherItems();
+                }
+            });
+
+            // 🔄 Optional: Update on slide cart buttons (increase, decrease, remove)
+            document.body.addEventListener('click', function (e) {
+                const target = e.target;
+
+                if (target.closest('.increase-quantity') || target.closest('.decrease-quantity') || target.closest('.remove-item')) {
+                    // Wait a tiny bit to let slide cart update localStorage
+                    setTimeout(renderVoucherItems, 50);
+                }
+            });
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const completeBtn = document.querySelector(".complete button");
+            const orderForm = document.getElementById("placeOrderUrl");
+
+            completeBtn.addEventListener("click", async function (event) {
+                event.preventDefault(); // ⛔ Stop immediate form submit
+
+                // 🧾 Customer information
+                const customerName = document.getElementById("username").value || "Unknown";
+                const customerAddress = document.getElementById("customer_address").value || "Not specified";
+                const date = new Date().toLocaleDateString();
+
+                // 🛍️ Voucher data
+                const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+                const subtotal = document.getElementById("voucherSubtotal").textContent || "0";
+                const shipping = document.getElementById("voucherShipping").textContent || "0";
+                const total = document.getElementById("voucherTotal").textContent || "0";
+
+                // ✨ Initialize jsPDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF("p", "mm", "a4");
+
+                // 🪶 Header
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(28);
+                doc.setTextColor(0, 100, 0);
+                doc.text("Acheik Aura", 105, 25, { align: "center" });
+
+                doc.setFontSize(12);
+                doc.setTextColor(80, 80, 80);
+                doc.text(`Date: ${date}`, 170, 35, { align: "right" });
+
+                // 🧍 Customer Information Box
+                doc.setFillColor(240, 248, 240);
+                doc.roundedRect(15, 42, 180, 28, 3, 3, "F");
+
+                doc.setFontSize(13);
+                doc.setTextColor(0, 80, 0);
+                doc.text("Customer Information", 20, 50);
+
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(40, 40, 40);
+                doc.text(`Name: ${customerName}`, 20, 58);
+                doc.text(`Address: ${customerAddress}`, 20, 64);
+
+                // 🪞 Section Divider
+                doc.setDrawColor(200, 200, 200);
+                doc.line(15, 75, 195, 75);
+
+                // 🧾 Items Section
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(14);
+                doc.setTextColor(0, 80, 0);
+                doc.text("Order Items", 15, 85);
+
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(20, 20, 20);
+
+                let y = 95;
+                if (cartItems.length === 0) {
+                    doc.text("No items found in cart.", 15, y);
+                    y += 10;
+                } else {
+                    cartItems.forEach((item, index) => {
+                        const itemName = item.name || "Unnamed";
+                        const qty = item.quantity || 1;
+
+                        // Item number + name
+                        doc.setFont("helvetica", "bold");
+                        doc.text(`${index + 1}.`, 15, y);
+                        doc.setFont("helvetica", "normal");
+                        doc.text(`${itemName}`, 25, y);
+                        doc.setFontSize(11);
+                        doc.text(`(x${qty})`, 180, y, { align: "right" });
+
+                        y += 8;
+                    });
+                }
+
+                // 📏 Draw a divider line before totals
+                y += 5;
+                doc.setDrawColor(220, 220, 220);
+                doc.line(15, y, 195, y);
+                y += 10;
+
+                // 💰 Totals Section
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(13);
+                doc.text("Order Summary", 15, y);
+                y += 8;
+
+                doc.setFont("helvetica", "normal");
+                doc.text(`Subtotal: ${subtotal} MMK`, 15, y);
+                y += 7;
+                doc.text(`Shipping: ${shipping} MMK`, 15, y);
+                y += 7;
+                doc.setFont("helvetica", "bold");
+                doc.text(`Total: ${total} MMK`, 15, y);
+                y += 20;
+
+                // 🌿 Footer
+                doc.setFontSize(11);
+                doc.setTextColor(80, 80, 80);
+                doc.text("Thank you for shopping with Acheik Aura!", 105, y, { align: "center" });
+                doc.text("www.acheikaura.com", 105, y + 7, { align: "center" });
+
+                // 💾 Save PDF
+                const pdfName = `Acheik_Aura_Voucher_${date.replace(/\//g, "-")}.pdf`;
+                doc.save(pdfName);
+
+                // 💾 Save order details to localStorage before submitting
+                const existingOrders = JSON.parse(localStorage.getItem("orderHistory")) || [];
+                existingOrders.push({
+                    date: date,
+                    name: customerName,
+                    address: customerAddress,
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    total: total,
+                    items: cartItems
+                });
+                localStorage.setItem("orderHistory", JSON.stringify(existingOrders));
+
+                // ⏳ Submit form after PDF download
+                setTimeout(() => orderForm.submit(), 1200);
+            });
+        });
+    </script>
+    {% endblock %}

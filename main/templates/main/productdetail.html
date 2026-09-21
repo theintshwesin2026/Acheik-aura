@@ -1,0 +1,758 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/descriptioncard.css' %}">
+
+<section class="product-detail">
+  <div class="product-container">
+    <!-- Product Images -->
+    <div class="product-images">
+      <div class="main-image">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'main/images/default-product.jpg' %}{% endif %}" 
+             alt="{{ product.name|default:'Padonmar Cheik' }}" id="main-product-img">
+      </div>
+      <div class="thumbnail-container">
+        {% for image in product.images.all %}
+          <div class="thumbnail {% if forloop.first %}active{% endif %}" data-image="{{ image.image.url }}">
+            <img src="{{ image.image.url }}" alt="{{ product.name }} thumbnail {{ forloop.counter }}">
+          </div>
+        {% empty %}
+          <!-- Default images if none are available -->
+          <div class="thumbnail active" data-image="{% static 'main/images/orange-padonma.jpg' %}">
+            <img src="{% static 'main/images/orange-padonma.jpg' %}" alt="Product thumbnail 1">
+          </div>
+          <div class="thumbnail" data-image="{% static 'main/images/purple-padonma.jpg' %}">
+            <img src="{% static 'main/images/purple-padonma.jpg' %}" alt="Product thumbnail 2">
+          </div>
+          <div class="thumbnail" data-image="{% static 'main/images/navy-padonma.jpg' %}">
+            <img src="{% static 'main/images/navy-padonma.jpg' %}" alt="Product thumbnail 3">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-info">
+      <h1 class="product-brand">{{ product.brand|default:"Shwe Loon Late Pyar" }}</h1>
+      <h2 class="product-name">{{ product.name|default:"Padonmar Cheik" }}</h2>
+      
+      <div class="product-price">
+        <span class="current-price">{{ product.price|default:"58,000" }} MMK</span>
+        {% if product.old_price %}
+          <span class="old-price">{{ product.old_price }} MMK</span>
+        {% endif %}
+        {% if product.on_sale %}
+          <span class="sale-badge">Sale</span>
+        {% endif %}
+      </div>
+      
+      <!-- Cashback Banner -->
+      <div class="cashback-banner">
+        <span class="cashback-icon">🎁</span>
+        <span class="cashback-text">Get 5000 MMK cashback for your first purchase</span>
+      </div>
+      
+      <!-- Color Selection -->
+      <div class="color-selection">
+        <label>Color:</label>
+        <div class="color-options">
+          <div class="color-option active" data-color="orange" style="background-color: orange;"></div>
+          <div class="color-option" data-color="purple" style="background-color: purple;"></div>
+          <div class="color-option" data-color="navy" style="background-color: navy;"></div>
+          <div class="color-option" data-color="blue" style="background-color: blue;"></div>
+        </div>
+      </div>
+      
+      <!-- Service Icons -->
+      <div class="service-icons">
+        <div class="service-item">
+          <i class="fas fa-hand-holding-usd service-icon"></i>
+          <div class="service-text">Cash on Delivery</div>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-shipping-fast service-icon"></i>
+          <div class="service-text">Fast Delivery</div>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-gem service-icon"></i>
+          <div class="service-text">Best Quality</div>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-headset service-icon"></i>
+          <div class="service-text">24/7 Support</div>
+        </div>
+      </div>
+      
+      <!-- Quantity & Add to Cart -->
+      <div class="product-actions">
+        <div class="quantity-selector">
+          <label for="quantity">Quantity:</label>
+          <div class="quantity-controls">
+            <button class="quantity-btn decrease">-</button>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" max="10">
+            <button class="quantity-btn increase">+</button>
+          </div>
+        </div>
+        
+        <button class="add-to-cart-btn" data-product-id="{{ product.id|default:'1' }}">
+          Add To Cart
+        </button>
+      </div>
+      
+      <!-- Accordion Sections -->
+      <div class="accordion-container">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="header-content">
+              <i class="fas fa-info-circle accordion-icon"></i>
+              <span>Product Information</span>
+            </div>
+            <i class="fas fa-plus accordion-toggle-icon"></i>
+          </div>
+          <div class="accordion-content">
+            <p>The Padonmar Cheik is a meticulously handwoven fabric that embodies the essence of Myanmar's centuries-old Acheik tradition. Each piece is crafted with precision on a traditional loom by skilled artisans in Mandalay, requiring weeks of dedicated weaving to achieve its complex patterns. The lotus-inspired motifs represent purity, harmony, and resilience, while the wave-like designs capture the flowing beauty of Myanmar's rivers. Woven from a blend of high-quality silk and cotton, the Padonmar Cheik offers a luxurious sheen, breathability, and long-lasting durability. This textile is not only a fashionable statement but also a cultural treasure passed down through generations. Wearing the Padonmar Cheik means carrying a piece of Myanmar's heritage that combines artistry, symbolism, and elegance.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="header-content">
+              <i class="fas fa-tshirt accordion-icon"></i>
+              <span>Garment Care</span>
+            </div>
+            <i class="fas fa-plus accordion-toggle-icon"></i>
+          </div>
+          <div class="accordion-content">
+            <p>To maintain the vibrant colors and delicate texture of your Padonmar Cheik, careful maintenance is essential. For everyday use, avoid frequent washing as this reduces the life of natural fibers. When washing becomes necessary, always use a mild, silk-safe detergent and cold water. Hand washing is strongly recommended, but if machine washing is unavoidable, use a gentle cycle and place the fabric inside a protective mesh laundry bag. Never wring the garment as this may distort its weave; instead, gently press out excess water with a clean towel. Air drying in the shade is ideal to preserve the natural sheen and prevent color fading. Proper care ensures your Padonmar Cheik retains its beauty and structure for years to come.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="header-content">
+              <i class="fas fa-magic accordion-icon"></i>
+              <span>Special Care Instructions</span>
+            </div>
+            <i class="fas fa-plus accordion-toggle-icon"></i>
+          </div>
+          <div class="accordion-content">
+            <p>Because the Padonmar Cheik is made from fine silk and cotton threads, it requires extra attention during storage and handling. For long-term care, dry cleaning by a professional is highly recommended to protect the intricate weaving and ensure colors remain vibrant. Avoid using bleach, stain removers, or harsh chemicals, as these can permanently damage fibers. When ironing, always use the lowest silk setting, place a thin cloth over the fabric, and iron while slightly damp to prevent heat marks. Store your garment in a breathable fabric bag rather than plastic to avoid moisture buildup and mildew. Keeping your Padonmar Cheik in a cool, dry place away from direct sunlight will help preserve its delicate texture and cultural value.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="header-content">
+              <i class="fas fa-shipping-fast accordion-icon"></i>
+              <span>Shipping and Tracking</span>
+            </div>
+            <i class="fas fa-plus accordion-toggle-icon"></i>
+          </div>
+          <div class="accordion-content">
+            <p>We are committed to delivering your Padonmar Cheik safely and promptly across Myanmar. Once your order is confirmed, processing typically takes 1–2 business days. For delivery, we partner with trusted logistics providers including Royal Express and Bee Express, ensuring reliable service to both urban and rural areas. Standard delivery within Yangon, Mandalay, and Nay Pyi Taw usually arrives within 3–5 business days, while regional locations may take 5–7 business days depending on accessibility. You will receive an SMS or email with a tracking number once your order has been dispatched, allowing you to monitor its progress. Our packaging is designed to protect delicate silk fabrics from humidity and handling, ensuring that your Padonmar Cheik reaches you in perfect condition.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <div class="header-content">
+              <i class="fas fa-undo-alt accordion-icon"></i>
+              <span>Return and Refund</span>
+            </div>
+            <i class="fas fa-plus accordion-toggle-icon"></i>
+          </div>
+          <div class="accordion-content">
+            <p>Your satisfaction is our priority, and we want you to feel confident in your purchase. We accept returns and exchanges within 30 days of delivery, provided that the item is in its original, unused condition with all tags and packaging intact. If you wish to return your Padonmar Cheik, simply contact our support team, and we will guide you through the process. Once the returned item is inspected and approved, you may choose between a full refund to your original payment method or an exchange for another product. Please note that items damaged due to improper handling, washing, or alterations will not be eligible for return. For defective or incorrect orders, we will cover all shipping costs for the return.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Product Detail Styles */
+  .product-detail {
+    padding: 40px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .product-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    padding: 0 20px;
+  }
+  
+  .product-images {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main-image {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .thumbnail-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+  }
+  
+  .thumbnail.active, .thumbnail:hover {
+    opacity: 1;
+    border-color: #8a4f7d;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-info {
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .product-brand {
+    color: #a67f98;
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .product-name {
+    color: #333;
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .current-price {
+    color: darkgreen;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .old-price {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 20px;
+  }
+  
+  .sale-badge {
+    background: #ff5e62;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  /* Cashback Banner */
+  .cashback-banner {
+    background-color: #c8e6c9;
+    color: darkgreen;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+  }
+  
+  .cashback-icon {
+    font-size: 18px;
+  }
+  
+  /* Color Selection */
+  .color-selection {
+    margin-bottom: 20px;
+  }
+  
+  .color-selection label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .color-options {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  
+  .color-option.active {
+    border-color: darkgreen;
+    transform: scale(1.1);
+  }
+  
+  .color-option:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Service Icons */
+  .service-icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .service-item {
+    text-align: center;
+    flex: 1;
+    padding: 0 5px;
+  }
+  
+  .service-icon {
+    font-size: 24px;
+    color: darkgreen;
+    margin-bottom: 5px;
+  }
+  
+  .service-text {
+    font-size: 12px;
+    color: #555;
+    font-weight: bold;
+  }
+  
+  /* Product Actions */
+  .product-actions {
+    margin: 30px 0;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .quantity-selector {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .quantity-selector label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .quantity-btn {
+    background: darkgreen;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #quantity {
+    width: 40px;
+    height: 33px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    outline: none;
+  }
+  
+  .add-to-cart-btn {
+    padding: 12px 25px;
+    background: darkgreen;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    flex: 1;
+    margin-top: 25px;
+  }
+  
+  .add-to-cart-btn:hover {
+    background: #006400;
+  }
+  
+  /* Accordion Styles */
+  .accordion-container {
+    margin-top: 40px;
+  }
+  
+  .accordion-item {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    cursor: pointer;
+  }
+  
+  .accordion-header:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    gap: 10px;
+  }
+  
+  .accordion-icon {
+    font-size: 18px;
+    color: darkgreen;
+  }
+  
+  .accordion-toggle-icon {
+    transition: transform 0.3s ease;
+    color: #555;
+  }
+  
+  .accordion-item.active .accordion-toggle-icon {
+    transform: rotate(45deg);
+  }
+  
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+  
+  .accordion-content p {
+    padding: 0 0 15px 28px;
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  /* Cart message styling */
+  .cart-message {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: darkgreen;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 968px) {
+    .product-container {
+      gap: 40px;
+    }
+    
+    .product-name {
+      font-size: 28px;
+    }
+    
+    .current-price {
+      font-size: 24px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .product-container {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .main-image {
+      height: 400px;
+    }
+    
+    .product-info {
+      padding: 0;
+    }
+    
+    .cart-message {
+      top: 80px;
+      right: 10px;
+      left: 10px;
+      text-align: center;
+    }
+    
+    .service-icons {
+      flex-wrap: wrap;
+    }
+    
+    .service-item {
+      flex: 0 0 50%;
+      margin-bottom: 15px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .product-detail {
+      padding: 20px 0;
+    }
+    
+    .product-container {
+      padding: 0 15px;
+    }
+    
+    .main-image {
+      height: 300px;
+    }
+    
+    .thumbnail {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .product-name {
+      font-size: 24px;
+    }
+    
+    .current-price {
+      font-size: 22px;
+    }
+    
+    .product-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .service-item {
+      flex: 0 0 100%;
+    }
+  }
+</style>
+
+<script>
+  // Function to update cart count in header
+  function updateCartCount() {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+    
+    // Update cart count in header
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    cartCountElements.forEach(element => {
+      element.textContent = totalItems;
+    });
+  }
+  
+  // Function to show "Added to cart" message
+  function showAddedToCartMessage(productName) {
+    // Create message element if it doesn't exist
+    let messageElement = document.querySelector('.cart-message');
+    
+    if (!messageElement) {
+      messageElement = document.createElement('div');
+      messageElement.className = 'cart-message';
+      document.body.appendChild(messageElement);
+    }
+    
+    // Set message content
+    messageElement.textContent = `Added "${productName}" to cart`;
+    
+    // Show message
+    messageElement.style.opacity = '1';
+    messageElement.style.transform = 'translateX(0)';
+    
+    // Hide message after 3 seconds
+    setTimeout(() => {
+      messageElement.style.opacity = '0';
+      messageElement.style.transform = 'translateX(100px)';
+    }, 3000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thumbnail click functionality
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.getElementById('main-product-img');
+    
+    thumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', function() {
+        // Remove active class from all thumbnails
+        thumbnails.forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked thumbnail
+        this.classList.add('active');
+        
+        // Update main image
+        const newImageSrc = this.getAttribute('data-image');
+        mainImage.src = newImageSrc;
+      });
+    });
+    
+    // Color selection
+    const colorOptions = document.querySelectorAll('.color-option');
+    colorOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        colorOptions.forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Change main image based on color selection
+        const color = this.getAttribute('data-color');
+        const newImageSrc = `{% static 'main/images/' %}${color}-padonma.jpg`;
+        mainImage.src = newImageSrc;
+      });
+    });
+    
+    // Quantity controls
+    const quantityInput = document.getElementById('quantity');
+    const decreaseBtn = document.querySelector('.quantity-btn.decrease');
+    const increaseBtn = document.querySelector('.quantity-btn.increase');
+    
+    if (decreaseBtn && quantityInput) {
+      decreaseBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+        }
+      });
+    }
+    
+    if (increaseBtn && quantityInput) {
+      increaseBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue < 10) {
+          quantityInput.value = currentValue + 1;
+        }
+      });
+    }
+    
+    // Add to cart functionality
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const selectedColor = document.querySelector('.color-option.active').getAttribute('data-color');
+        
+        // Get product details
+        const productName = document.querySelector('.product-name').textContent;
+        const productPrice = document.querySelector('.current-price').textContent;
+        const productImage = document.querySelector('.main-image img').src;
+        const productBrand = document.querySelector('.product-brand').textContent;
+        
+        // Get existing cart items from localStorage
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        
+        // Check if product already exists in cart
+        const existingItemIndex = cartItems.findIndex(item => 
+          item.id === productId && item.color === selectedColor
+        );
+        
+        if (existingItemIndex >= 0) {
+          // If product exists, increase quantity
+          cartItems[existingItemIndex].quantity += quantity;
+        } else {
+          // If product doesn't exist, add new item
+          cartItems.push({
+            id: productId,
+            name: productName,
+            price: productPrice,
+            image: productImage,
+            brand: productBrand,
+            color: selectedColor,
+            quantity: quantity
+          });
+        }
+        
+        // Save updated cart to localStorage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        
+        // Update cart count in the header
+        updateCartCount();
+        
+        // Show success message
+        showAddedToCartMessage(productName);
+      });
+    }
+    
+    // Accordion functionality
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+    accordionHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const accordionItem = header.parentElement;
+        const accordionContent = header.nextElementSibling;
+        
+        accordionItem.classList.toggle('active');
+        
+        if (accordionItem.classList.contains('active')) {
+          accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+        } else {
+          accordionContent.style.maxHeight = '0';
+        }
+      });
+    });
+    
+    // Initialize cart count on page load
+    updateCartCount();
+  });
+</script>
+{% endblock %}

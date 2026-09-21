@@ -1,0 +1,1508 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'main/css/designgallery.css' %}">
+<style>
+   /*profile */
+    .dprofile-header {
+      text-align: center;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+
+
+    }
+
+    .dprofile-header h2 {
+      font-size: 28px;
+      color: #006400;
+      margin-bottom: 10px;
+    }
+
+    .dprofile-header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #006400;
+      margin-top: 15px;
+      background-color: #f1f1f1
+    }
+
+
+
+    .dprofile-container {
+      display: flex;
+
+      gap: 0px;
+      width: 70%;
+      margin-left: 290px;
+      height: 400px;
+      justify-content: center;
+
+
+
+    }
+  .fabric-gallery {
+    display: flex;
+    height: 100px;
+    flex-wrap: wrap;
+    gap: 10px;
+
+  }
+
+  .fabric-item {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    text-align: center;
+    height: 80px;
+    transition: 0.3s;
+    cursor: pointer;
+
+  }
+
+  .fabric-item:hover {
+    border-color: #ddd;
+    transform: scale(1.05);
+  }
+
+  .fabric-item.selected {
+    border-color: rgb(186, 124, 7);
+    box-shadow: 0 0 8px darkgoldenrod;
+  }
+
+  .fabric-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .order-fabric-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+  }
+
+  .order-fabric-gallery .fabric-item {
+    border: 1px solid #ccc;
+    padding: 3px;
+    border-radius: 5px;
+    width: 80px;
+    text-align: center;
+  }
+
+  .order-fabric-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+</style>
+<style>
+  /* ===== LEFT IMAGES ===== */
+  .order-images {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .order-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+  }
+
+  /* ===== RIGHT SIDE DETAILS ===== */
+  .order-details {
+    flex: 1;
+
+  }
+
+  .order-details h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+
+  }
+
+  .order-details h4 {
+    font-size: 14px;
+    color: #333;
+    margin: 2px 0;
+  }
+
+  .order-details p {
+    margin: 1px 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  /* ===== Designer Fee + Buttons ===== */
+  .order-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .designer-fee {
+    font-weight: 600;
+    color: #222;
+    font-size: 13px;
+  }
+
+  .edit-btn,
+  .remove-btn {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+  }
+
+  .edit-btn {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+
+  .edit-btn:hover {
+    background-color: #45a049;
+  }
+
+  .remove-btn {
+    background-color: #f44336;
+    color: #fff;
+  }
+
+  .remove-btn:hover {
+    background-color: #e53935;
+  }
+
+  /* ===== Responsive for Mobile ===== */
+  @media (max-width: 600px) {
+    .order-card {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px;
+    }
+
+    .order-images {
+      margin-bottom: 8px;
+    }
+
+    .order-details {
+      margin-left: 0;
+    }
+
+    .order-actions {
+      flex-wrap: wrap;
+    }
+  }
+
+
+  .both {
+    width: 600px;
+  }
+
+  /* --- Submitted Orders Section --- */
+  .customized-summary {
+    margin-top: 20px;
+    overflow-y: scroll;
+    height: 500px;
+    padding: 20px;
+    background: #faf9f6;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .customized-summary h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #333;
+    border-left: 5px solid #f48c06;
+    padding-left: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ====== Submitted Order Card ====== */
+  .submitted-card {
+    height: 700px;
+    padding: 20px;
+    background-color: #f48d0675;
+  }
+
+  .submitted-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ====== Optional Small Image or Icon (Left Side) ====== */
+  .submitted-card img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+  }
+
+  /* ====== Right Details ====== */
+  .submitted-details {
+    flex: 1;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.4;
+  }
+
+  .submitted-details h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+
+  }
+
+  .submitted-details p {
+    margin: 2px 0;
+    font-size: 13px;
+  }
+
+  .submitted-details b {
+    color: #222;
+  }
+
+  /* ====== Designer Fee & Info ====== */
+  .submitted-fee {
+    font-weight: 600;
+
+    font-size: 13px;
+    margin-top: 50px;
+
+  }
+
+  /* ====== Animation (Optional) ====== */
+  .submitted-card {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeInUp 0.4s ease forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ====== Mobile Friendly ====== */
+  @media (max-width: 600px) {
+    .submitted-card {
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 100%;
+    }
+
+    .submitted-card img {
+      width: 100%;
+      height: auto;
+    }
+  }
+</style>
+<div class="designerheader">
+  <h1>Exclusive Acheik & Longyi Collection</h1>
+  <p>Browse our designer’s gallery and select your unique style.</p>
+</div>
+
+<!-- Designer Header -->
+<div class="dprofile-header">
+  <img src="{% static 'main/photos/gptwar.jpg' %}" alt="Designer May Myat War Soe">
+  <h2>May Myat War Soe</h2>
+</div>
+
+<!-- Profile Content -->
+<div class="dprofile-container">
+  <!-- Left column -->
+  <div class="column">
+    <div class="info-box">
+      <i class="fa-solid fa-user-tie"></i>
+      <div class="info-text">
+        <b>Experience</b>
+        A leading specialist in traditional wedding dresses for all ages,
+        ensuring elegance and authenticity in every design.
+      </div>
+    </div>
+    <div class="info-box">
+      <i class="fa-solid fa-phone"></i>
+      <div class="info-text">
+        <b>Direct Consultation</b>
+        Customers can reach out for detailed tailoring guidance and personalized
+        adjustments to suit their preferred timelines.
+      </div>
+    </div>
+  </div>
+
+  <!-- Center -->
+  <div class="column">
+    <div class="center">
+      <img src="{% static 'main/photos/ancientwd4.jpg' %}" alt="Designer Myo Min Soe">
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="column">
+    <div class="info-box">
+      <i class="fa-solid fa-gavel"></i>
+      <div class="info-text">
+        <b>Principles</b>
+        Upholding discipline and professionalism with clear guidelines
+        to deliver reliable and respectful services to all clients.
+      </div>
+    </div>
+    <div class="info-box">
+      <i class="fa-solid fa-heart"></i>
+      <div class="info-text">
+        <b>Passion & Service</b>
+        Every creation is crafted with love, patience, and dedication,
+        reflecting our genuine care for the happiness of our customers.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Category Tabs -->
+<div class="category-tabs">
+  <button id="youngBtn" class="active">Young</button>
+  <button id="adultBtn">Adult</button>
+  <button id="elderlyBtn">Elderly</button>
+</div>
+
+<!-- Design Gallery -->
+<div class="design-gallery">
+
+
+
+
+  <!-- Example of Young Women Grid -->
+  <div class="design-grid active" id="youngGrid">
+    <div class="design-item" data-code="S001" data-img="{% static 'main/photos/shan1-removebg-preview.png' %}">
+      <img src="{% static 'main/photos/shan1-removebg-preview.png' %}">
+      <p>S001</p>
+    </div>
+    <div class="design-item" data-code="S002" data-img="{% static 'main/photos/shan2-removebg-preview.png' %}">
+      <img src="{% static 'main/photos/shan2-removebg-preview.png' %}">
+      <p>S002</p>
+    </div>
+
+    <div class="design-item" data-code="S003" data-img="{% static 'main/photos/shan4-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/shan4-removebg-preview.png' %}">
+      <p>S003</p>
+    </div>
+    <div class="design-item" data-code="S004" data-img="{% static 'main/photos/shan5-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/shan5-removebg-preview.png' %}">
+      <p>S004</p>
+    </div>
+    <div class="design-item" data-code="S005" data-img="{% static 'main/photos/shan6-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/shan6-removebg-preview.png' %}">
+      <p>S005</p>
+    </div>
+    <div class="design-item" data-code="M006" data-img="{% static 'main/photos/mon1-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/mon1-removebg-preview.png' %}">
+      <p>M006</p>
+    </div>
+    <div class="design-item" data-code="M007" data-img="{% static 'main/photos/mon2-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/mon2-removebg-preview.png' %}">
+      <p>M007</p>
+    </div>
+    <div class="design-item" data-code="M008" data-img="{% static 'main/photos/mon3-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/mon3-removebg-preview.png' %}">
+      <p>M008</p>
+    </div>
+    <div class="design-item" data-code="M009" data-img="{% static 'main/photos/mon4-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/mon4-removebg-preview.png' %}">
+      <p>M009</p>
+    </div>
+    <div class="design-item" data-code="K010" data-img="{% static 'main/photos/kachin1-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/kachin1-removebg-preview.png' %}">
+      <p>K010</p>
+    </div>
+    <div class="design-item" data-code="C011" data-img="{% static 'main/photos/kachin2-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/kachin2-removebg-preview.png' %}">
+      <p>K011</p>
+    </div>
+    <div class="design-item" data-code="C012" data-img="{% static 'main/photos/kachin3-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/kachin3-removebg-preview.png' %}">
+      <p>K012</p>
+    </div>
+
+
+  </div>
+
+  <!-- Adult Women -->
+  <div class="design-grid" id="adultGrid">
+    <div class="design-item" data-code="A001" data-img="{% static 'main/photos/WD10-removebg-preview.png' %}">
+      <img src="{% static 'main/photos/WD10-removebg-preview.png' %}">
+      <p>A001</p>
+    </div>
+    <div class="design-item" data-code="A002" data-img="{% static 'main/photos/WD31.png' %}"><img
+        src="{% static 'main/photos/WD31.png' %}">
+      <p>A002</p>
+    </div>
+    <div class="design-item" data-code="A003" data-img="{% static 'main/photos/WD15-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/WD15-removebg-preview.png' %}">
+      <p>A003</p>
+    </div>
+    <div class="design-item" data-code="A004" data-img="{% static 'main/photos/WD12-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/WD12-removebg-preview.png' %}">
+      <p>A004</p>
+    </div>
+    <div class="design-item" data-code="A005" data-img="{% static 'main/photos/WD45.png' %}"><img
+        src="{% static 'main/photos/WD45.png' %}">
+      <p>A005</p>
+    </div>
+    <div class="design-item" data-code="A006" data-img="{% static 'main/photos/WD46.png' %}"><img
+        src="{% static 'main/photos/WD46.png' %}">
+      <p>A006</p>
+    </div>
+    <div class="design-item" data-code="A007" data-img="{% static 'main/photos/WD47.png' %}"><img
+        src="{% static 'main/photos/WD47.png' %}">
+      <p>A007</p>
+    </div>
+    <div class="design-item" data-code="A008" data-img="{% static 'main/photos/WD48.png' %}"><img
+        src="{% static 'main/photos/WD48.png' %}">
+      <p>A008</p>
+    </div>
+    <div class="design-item" data-code="A009" data-img="{% static 'main/photos/WD40.png' %}"><img
+        src="{% static 'main/photos/WD40.png' %}">
+      <p>A009</p>
+    </div>
+    <div class="design-item" data-code="A010" data-img="{% static 'main/photos/WD30-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/WD30-removebg-preview.png' %}">
+      <p>A010</p>
+    </div>
+    <div class="design-item" data-code="A011" data-img="{% static 'main/photos/WD49.png' %}"><img
+        src="{% static 'main/photos/WD49.png' %}">
+      <p>A011</p>
+    </div>
+    <div class="design-item" data-code="A012" data-img="{% static 'main/photos/WD43.png' %}"><img
+        src="{% static 'main/photos/WD43.png' %}">
+      <p>A012</p>
+    </div>
+
+    <!-- ... (continue for A002–A012) ... -->
+  </div>
+
+  <!-- Elderly Women -->
+  <div class="design-grid" id="elderlyGrid">
+    <div class="design-item" data-code="E001" data-img="{% static 'main/photos/WD50.png' %}">
+      <img src="{% static 'main/photos/WD50.png' %}">
+      <p>E001</p>
+    </div>
+    <div class="design-item" data-code="E002" data-img="{% static 'main/photos/WD51.png' %}"><img
+        src="{% static 'main/photos/WD51.png' %}">
+      <p>E002</p>
+    </div>
+    <div class="design-item" data-code="E003" data-img="{% static 'main/photos/WD55.png' %}"><img
+        src="{% static 'main/photos/WD55.png' %}">
+      <p>E003</p>
+    </div>
+    <div class="design-item" data-code="E004" data-img="{% static 'main/photos/WD44.png' %}"><img
+        src="{% static 'main/photos/WD44.png' %}">
+      <p>E004</p>
+    </div>
+    <div class="design-item" data-code="E005" data-img="{% static 'main/photos/WD32.png' %}"><img
+        src="{% static 'main/photos/WD32.png' %}">
+      <p>E005</p>
+    </div>
+    <div class="design-item" data-code="E006" data-img="{% static 'main/photos/WD16-removebg-preview.png' %}"><img
+        src="{% static 'main/photos/WD16-removebg-preview.png' %}">
+      <p>E006</p>
+    </div>
+    <div class="design-item" data-code="A012" data-img="{% static 'main/photos/WD54.png' %}"><img
+        src="{% static 'main/photos/WD54.png' %}">
+      <p>E007</p>
+    </div>
+    <div class="design-item" data-code="E008" data-img="{% static 'main/photos/WD53.png' %}"><img
+        src="{% static 'main/photos/WD53.png' %}">
+      <p>E008</p>
+    </div>
+    <div class="design-item" data-code="E009" data-img="{% static 'main/photos/WD52.png' %}"><img
+        src="{% static 'main/photos/WD52.png' %}">
+      <p>E009</p>
+    </div>
+    <div class="design-item" data-code="E010" data-img="{% static 'main/photos/WD58.png' %}"><img
+        src="{% static 'main/photos/WD58.png' %}">
+      <p>E010</p>
+    </div>
+    <div class="design-item" data-code="E011" data-img="{% static 'main/photos/WD57.png' %}"><img
+        src="{% static 'main/photos/WD57.png' %}">
+      <p>E011</p>
+    </div>
+    <div class="design-item" data-code="E012" data-img="{% static 'main/photos/WD56.png' %}"><img
+        src="{% static 'main/photos/WD56.png' %}">
+      <p>E012</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Form Section -->
+<div class="formsection">
+  <div class="form-container">
+    <h2>Customize Your Burmese Dress</h2>
+    <p class="note">
+      Welcome! Please fill out the details below to create a bespoke handwoven longyi tailored to your measurements
+      and
+      preferences. We'd love to help create your dream dress! <br>
+      You can also consult directly with our designer before submitting your order.
+    <form id="customForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Name -->
+      <div class="row">
+        <div>
+          <label for="name">* Your Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+
+        <div>
+          <label for="phone">* Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Auto-filled after country selection">
+        </div>
+      </div>
+
+      <!-- Row: Size chart + Reference Photos -->
+      <div class="row">
+        <div>
+          <div class="size-chart-container">
+            <span class="size-chart-link" id="openSizeChart">Size Chart</span>
+            <div class="chosen-size" id="chosenSize">* Chosen Size: None</div>
+          </div>
+        </div>
+        <!-- Selected Design -->
+        <div class="preview-box">
+          <h3>Selected Design</h3>
+          <div id="selectedDesign" class="preview-content">
+            <p>No design selected yet.</p>
+          </div>
+        </div>
+      </div>
+      <div class="preview-box">
+        <h3>Selected Fabric</h3>
+        <div id="selectedFabric" class="preview-content">
+          <!-- This will be updated dynamically from shopping cart JS -->
+          <p>No fabric selected yet.</p>
+        </div>
+      </div>
+      <!-- Description -->
+      <label for="description">Tell us more about your dress</label>
+      <textarea id="description" name="description" rows="4"></textarea>
+
+      <!-- Preferred Neck Style -->
+      <div class="option-group">
+        <p>* Your Preferred Neck Style (optional):</p>
+        <label><input type="radio" name="neck" value="Sweetheart"><span></span> Round Neck</label>
+        <label><input type="radio" name="neck" value="V-Neck"><span></span> Sweetheart Neck</label>
+        <label><input type="radio" name="neck" value="Off-Shoulder"><span></span> Off-Shoulder</label>
+        <label><input type="radio" name="neck" value="High Neck"><span></span> High Neck</label>
+        <label><input type="radio" name="neck" value="Square Neck"><span></span> Square Neck</label>
+        <label><input type="radio" name="neck" value="Other"><span></span> Other (Please specify)</label>
+        <textarea id="neck_note" placeholder="Additional note about neck style..." disabled></textarea>
+      </div>
+
+      <!-- Preferred Sleeves Style -->
+      <div class="option-group">
+        <p>* Your Preferred Sleeves Style (optional):</p>
+        <label><input type="radio" name="sleeves" value="Sleeveless"><span></span> Sleeveless</label>
+        <label><input type="radio" name="sleeves" value="Short Sleeves"><span></span> Short Sleeves</label>
+        <label><input type="radio" name="sleeves" value="Long Sleeves"><span></span> Long Sleeves</label>
+        <label><input type="radio" name="sleeves" value="Off-Shoulder Sleeves"><span></span> Off-Shoulder
+          Sleeves</label>
+        <label><input type="radio" name="sleeves" value="Bell Sleeves"><span></span> Bell Sleeves</label>
+        <label><input type="radio" name="sleeves" value="Other"><span></span> Other (Please specify)</label>
+        <textarea id="sleeves_note" placeholder="Additional note about sleeves style..." disabled></textarea>
+      </div>
+
+      <!-- Preferred Accessories -->
+      <div class="option-group">
+        <p>* Your Preferred decorative elements (optional):</p>
+        <label><input type="radio" name="accessories" value="Veil"><span></span> Sequins</label>
+        <label><input type="radio" name="accessories" value="Tiara"><span></span> Rhinestones / Crystals</label>
+        <label><input type="radio" name="accessories" value="Necklace"><span></span> Beads / Pearls</label>
+        <label><input type="radio" name="accessories" value="Earrings"><span></span> Appliqué Flowers</label>
+        <label><input type="radio" name="accessories" value="Bracelet"><span></span> Brooches / Pins</label>
+        <label><input type="radio" name="accessories" value="Other"><span></span> Other (Please specify)</label>
+        <textarea id="accessories_note" placeholder="Additional note about accessories..." disabled></textarea>
+      </div>
+
+
+
+      <!-- Designer Section -->
+      <div class="designer-section">
+        <!-- Consult Designer -->
+        <label style="font-size:17px; ">Fee based on service type</label>
+        <p style="font-size:14px; color:#555;">“Choose your preferred delivery option: Urgent or Regular. We make it
+          easy and convenient for you to get your order on time.”
+        </p>
+        <!-- Service Type (Check buttons) -->
+        <div class="service-type">
+          <label class="check-btn">
+            <input type="checkbox" name="serviceOption" value="regular" id="regularCheck">
+            <span>Regular</span>
+          </label>
+          <label class="check-btn">
+            <input type="checkbox" name="serviceOption" value="urgent" id="urgentCheck">
+            <span>Urgent</span>
+          </label>
+        </div>
+
+        <!-- Designer Info Display -->
+        <div id="designerInfo" class="designerinfo">
+          <p><strong>Designer Name:</strong> <span id="designerNameDisplay">(Auto-filled)</span></p>
+          <p><strong>Fees:</strong> <span id="designerFeesDisplay">(Auto-filled)</span></p>
+          <p><strong>Waiting Time:</strong> <span id="waitingTimeDisplay">(Auto-filled)</span></p>
+        </div>
+
+        <!-- Hidden Inputs (for form submission) -->
+        <input type="hidden" id="designerName" name="designerName">
+        <input type="hidden" id="designerFees" name="designerFees">
+        <input type="hidden" id="waitingTime" name="waitingTime">
+
+      </div>
+      <!-- Consult Designer -->
+      <p style="font-size:14px; color:#555;">**For more information regarding the design, please consult the designer
+        directly.** <strong>+95 9 123 456
+          789</strong></p>
+
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button type="reset" id="cancelBtn" class="cancel-btn">Cancel</button>
+        <button type="button" class="add-btn" id="addToOrderBtn">Add to Order</button>
+      </div>
+    </form>
+  </div>
+  <div class="both">
+    <!-- ORDER SUMMARY PANEL -->
+    <div class="summary-container" id="summaryContainer">
+      <h3>Customized Order Summary</h3>
+      <div id="ordersList" class="orders-scroll"></div>
+      <div class="summary-footer">
+        <div class="cart-total">
+          Total Designer Fee: MMK <span id="cartTotal">0</span>
+        </div>
+        <div style="text-align:center; margin-top:15px;">
+          <button id="submitAllBtn" class="submit-btn">Submit All Orders</button>
+        </div>
+      </div>
+    </div>
+    <!-- 🧾 Submitted Orders (History Section) -->
+  </div>
+  <!-- Overlay & Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modalsize">
+      <span class="close-btn" id="closeBtn">&times;</span>
+      <div class="modal-header">
+        <h2>Acheikaura SIZE CHART</h2>
+      </div>
+      <div class="toggle-buttons">
+        <button id="inchesBtn" class="active">Inches</button>
+        <button id="cmBtn">Centimetres</button>
+      </div>
+
+      <!-- Inches Table -->
+      <table id="inchesTable">
+        <tr>
+          <th>Size</th>
+          <th>Bust</th>
+          <th>Waist</th>
+          <th>Shoulder</th>
+          <th>Hips</th>
+        </tr>
+        <tr>
+          <td>XS</td>
+          <td>32-34</td>
+          <td>24-26</td>
+          <td>13</td>
+          <td>36</td>
+        </tr>
+        <tr>
+          <td>S</td>
+          <td>34-36</td>
+          <td>26-28</td>
+          <td>14</td>
+          <td>38</td>
+        </tr>
+        <tr>
+          <td>M</td>
+          <td>36-38</td>
+          <td>28-30</td>
+          <td>14</td>
+          <td>40</td>
+        </tr>
+        <tr>
+          <td>L</td>
+          <td>38-40</td>
+          <td>30-32</td>
+          <td>15</td>
+          <td>42</td>
+        </tr>
+        <tr>
+          <td>XL</td>
+          <td>40-42</td>
+          <td>32-34</td>
+          <td>15</td>
+          <td>44</td>
+        </tr>
+        <tr>
+          <td>XXL</td>
+          <td>42-44</td>
+          <td>34-36</td>
+          <td>15</td>
+          <td>46</td>
+        </tr>
+      </table>
+
+      <!-- CM Table -->
+      <table id="cmTable" style="display:none;">
+        <tr>
+          <th>Size</th>
+          <th>Bust</th>
+          <th>Waist</th>
+          <th>Shoulder</th>
+          <th>Hips</th>
+        </tr>
+        <tr>
+          <td>XS</td>
+          <td>81-86</td>
+          <td>61-66</td>
+          <td>33</td>
+          <td>91</td>
+        </tr>
+        <tr>
+          <td>S</td>
+          <td>86-91</td>
+          <td>66-71</td>
+          <td>34</td>
+          <td>97</td>
+        </tr>
+        <tr>
+          <td>M</td>
+          <td>91-97</td>
+          <td>71-76</td>
+          <td>36</td>
+          <td>102</td>
+        </tr>
+        <tr>
+          <td>L</td>
+          <td>97-102</td>
+          <td>76-81</td>
+          <td>37</td>
+          <td>107</td>
+        </tr>
+        <tr>
+          <td>XL</td>
+          <td>102-107</td>
+          <td>81-86</td>
+          <td>37</td>
+          <td>112</td>
+        </tr>
+        <tr>
+          <td>XXL</td>
+          <td>107-112</td>
+          <td>86-91</td>
+          <td>38</td>
+          <td>117</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <!-- ✅ Popup Box -->
+  <!-- ✅ Popup Box -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <div class="checkmark">✔</div>
+      <h2>Your order has been added to the voucher! </h2>
+      <p>Thank you so much! We’ll prepare everything with care and serve you just the way you requested. 💛</p>
+      <button id="closePopup">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById("openSizeChart");
+  const overlay = document.getElementById("overlay");
+  const closeBtn = document.getElementById("closeBtn");
+  const inchesBtn = document.getElementById("inchesBtn");
+  const cmBtn = document.getElementById("cmBtn");
+  const inchesTable = document.getElementById("inchesTable");
+  const cmTable = document.getElementById("cmTable");
+  const chosenSize = document.getElementById("chosenSize");
+
+  // <-- shared variable for order summary
+  // Open/Close
+  openBtn.onclick = () => overlay.classList.add("active");
+  closeBtn.onclick = () => overlay.classList.remove("active");
+
+  // Toggle buttons
+  inchesBtn.onclick = () => {
+    inchesTable.style.display = "table";
+    cmTable.style.display = "none";
+    inchesBtn.classList.add("active");
+    cmBtn.classList.remove("active");
+  };
+  cmBtn.onclick = () => {
+    cmTable.style.display = "table";
+    inchesTable.style.display = "none";
+    cmBtn.classList.add("active");
+    inchesBtn.classList.remove("active");
+  };
+
+
+  // Size selection (make sure one size only, across both tables)
+  function addRowClick(table, otherTable) {
+    [...table.rows].forEach((row, i) => {
+      if (i === 0) return; // skip header row
+      row.onclick = () => {
+        // Remove selection from both tables
+        [...table.rows].forEach(r => r.classList.remove("selected"));
+        [...otherTable.rows].forEach(r => r.classList.remove("selected"));
+
+        // Add highlight to clicked row
+        row.classList.add("selected");
+
+        // Save size details into shared variable
+        selectedSize = [...row.cells].map((cell, index) =>
+          table.rows[0].cells[index].innerText + ": " + cell.innerText
+        ).join(", ");
+
+        // Display chosen size
+        chosenSize.innerText = "Chosen Size → " + selectedSize;
+      };
+    });
+  }
+
+  addRowClick(inchesTable, cmTable);
+  addRowClick(cmTable, inchesTable);
+</script>
+
+<script>
+
+  // Allow unselecting radio buttons on re-click
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('click', function (e) {
+      if (this.checked && this.dataset.wasChecked === "true") {
+        this.checked = false;
+        this.dispatchEvent(new Event("change")); // trigger change for textarea handling
+      }
+      this.dataset.wasChecked = this.checked ? "true" : "false";
+    });
+  });
+
+  // Function to handle enabling/disabling textareas
+  function handleOtherOption(groupName, textareaId) {
+    const radios = document.querySelectorAll(`input[name="${groupName}"]`);
+    const textarea = document.getElementById(textareaId);
+
+    radios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.value === "Other" && radio.checked) {
+          textarea.disabled = false;
+          textarea.focus();
+        } else if (radio.value === "Other" && !radio.checked) {
+          textarea.value = "";
+          textarea.disabled = true;
+        }
+        if (!document.querySelector(`input[name="${groupName}"]:checked`)) {
+          textarea.value = "";
+          textarea.disabled = true;
+        }
+      });
+    });
+  }
+
+  // Apply to all groups
+  handleOtherOption("neck", "neck_note");
+  handleOtherOption("sleeves", "sleeves_note");
+  handleOtherOption("accessories", "accessories_note");
+</script>
+
+<!-- --------------------------------------------------------------Order Summary Script -->
+
+
+<script>
+  (function () {
+    // ---- Single source of truth DOM refs ----
+    const submitAllBtn = document.getElementById("submitAllBtn");
+    const popup = document.getElementById("popup");
+    const popupOkBtn = document.getElementById("popupOkBtn") || document.getElementById("closePopup"); // ok button inside popup
+    const popupClose = document.getElementById("popupCloseBtn"); // optional close X
+    const ordersList = document.getElementById("ordersList");
+    const cartTotalEl = document.getElementById("cartTotal");
+    const form = document.getElementById("customForm"); // <-- keep this id consistent
+    const addToOrderBtn = document.getElementById("addToOrderBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const customizedSummary = document.getElementById("customizedSummary");
+    const selectedFabricContainer = document.getElementById("selectedFabric");
+
+    // ---- State ----
+    let cartTotal = 0;
+
+    // Helper: update total fee display
+    function updateCartTotalDisplay() {
+      if (cartTotalEl) cartTotalEl.textContent = cartTotal;
+    }
+    // Helper: create order card DOM from order object
+    function createOrderCard(orderObj) {
+      const fee = parseInt(orderObj.designerFees) || 0;
+
+      const card = document.createElement("div");
+      card.className = "order-card";
+      card.dataset.fee = fee;
+
+      // Build fabrics HTML (if any)
+      let fabricsHTML = "";
+      if (orderObj.selectedFabrics && orderObj.selectedFabrics.length) {
+        fabricsHTML = `<div class="order-fabrics"><h5>Selected Fabrics</h5><div class="order-fabric-gallery">`;
+        orderObj.selectedFabrics.forEach(f => {
+          fabricsHTML += `
+        <div class="fabric-item">
+          <img src="${f.image}" alt="${escapeHtml(f.name)}">
+          <p>${escapeHtml(f.name)}</p>
+        </div>`;
+        });
+        fabricsHTML += `</div></div>`;
+      }
+
+      const designHTML = orderObj.designHTML || "";
+
+      card.innerHTML = `
+    <h4>${escapeHtml(orderObj.name || "Unnamed")}'s Dress</h4>
+    <div class="order-details">
+      <p><strong>Size:</strong> ${escapeHtml(orderObj.size || "N/A")}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(orderObj.phone || "N/A")}</p>
+      <p><strong>Description:</strong> ${escapeHtml(orderObj.description || "N/A")}</p>
+      <p><strong>Neck:</strong> ${escapeHtml(orderObj.neck || "N/A")} ${orderObj.neck === "Other" ? "(" + escapeHtml(orderObj.neck_note || "") + ")" : ""}</p>
+      <p><strong>Sleeves:</strong> ${escapeHtml(orderObj.sleeves || "N/A")} ${orderObj.sleeves === "Other" ? "(" + escapeHtml(orderObj.sleeves_note || "") + ")" : ""}</p>
+      <p><strong>Decorative Elements:</strong> ${escapeHtml(orderObj.accessories || "N/A")} ${orderObj.accessories === "Other" ? "(" + escapeHtml(orderObj.accessories_note || "") + ")" : ""}</p>
+      <p><strong>Designer Name:</strong> ${escapeHtml(orderObj.designerName || "N/A")}</p>
+      <p><strong>Waiting Time:</strong> ${escapeHtml(orderObj.waitingTime || "N/A")}</p>
+      ${designHTML}
+      ${fabricsHTML}
+    </div>
+    <div class="order-fee">Designer Fee: <span style="color:#000;">MMK ${fee}</span></div>
+    <div class="order-actions">
+      <button type="button" class="edit-btn">Edit</button>
+      <button type="button" class="remove-btn">Remove</button>
+    </div>
+  `;
+      // When added, increase total
+      cartTotal += fee;
+      updateCartTotalDisplay();
+
+      // Remove & Edit events remain the same
+      const removeBtn = card.querySelector(".remove-btn");
+      removeBtn.addEventListener("click", () => {
+        const feeVal = parseInt(card.dataset.fee) || 0;
+        cartTotal -= feeVal;
+        cartTotalEl.textContent = cartTotal;
+        card.remove();
+        resetDesignPreviewAndForm();
+      });
+
+      const editBtn = card.querySelector(".edit-btn");
+      editBtn.addEventListener("click", () => {
+        populateFormFromOrder(orderObj);
+        const feeVal = parseInt(card.dataset.fee) || 0;
+        cartTotal -= feeVal;
+        cartTotalEl.textContent = cartTotal;
+        card.remove();
+        resetDesignPreview();
+      });
+
+      return card;
+    }
+
+    // escapeHtml helper to avoid injecting user values directly
+    function escapeHtml(str) {
+      if (!str && str !== 0) return "";
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // Reset design preview and form fields
+    function resetDesignPreviewAndForm() {
+      // selected design preview
+      const selDesign = document.getElementById("selectedDesign");
+      if (selDesign) selDesign.innerHTML = `<p>No design selected yet.</p>`;
+
+      // selected fabrics
+      if (selectedFabricContainer) selectedFabricContainer.innerHTML = `<p>No fabric selected yet.</p>`;
+
+      // reset form
+      if (form) {
+        form.reset();
+        // chosen size display if exists
+        const chosenSize = document.getElementById("chosenSize");
+        if (chosenSize) chosenSize.innerText = "Chosen Size: None";
+      }
+
+      // reset other UI bits (tables, notes, checkboxes) - adjust IDs to your markup
+      ["neck_note", "sleeves_note", "accessories_note"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = ""; el.disabled = true; }
+      });
+      const regularCheck = document.getElementById("regularCheck");
+      const urgentCheck = document.getElementById("urgentCheck");
+      if (regularCheck) regularCheck.checked = false;
+      if (urgentCheck) urgentCheck.checked = false;
+
+      // remove selected highlights in fabric gallery if any
+      if (selectedFabricContainer) {
+        selectedFabricContainer.querySelectorAll('.fabric-item.selected').forEach(i => i.classList.remove('selected'));
+      }
+    }
+
+    function resetDesignPreview() {
+      // only clear selected fabrics/design while keeping form
+      const selDesign = document.getElementById("selectedDesign");
+      if (selDesign) selDesign.innerHTML = `<p>No design selected yet.</p>`;
+      if (selectedFabricContainer) selectedFabricContainer.innerHTML = `<p>No fabric selected yet.</p>`;
+    }
+
+    // Populate the form fields from an order object (for Edit)
+    function populateFormFromOrder(orderObj) {
+      if (!form) return;
+      try {
+        Object.keys(orderObj).forEach(k => {
+          const el = form.elements[k];
+          if (!el) return;
+          if (el.type === "checkbox" || el.type === "radio") {
+            el.checked = !!orderObj[k];
+          } else {
+            el.value = orderObj[k];
+          }
+        });
+
+        // if there are note fields, set and enable them
+        ["neck_note", "sleeves_note", "accessories_note"].forEach(id => {
+          const val = orderObj[id];
+          const el = document.getElementById(id);
+          if (el) { el.value = val || ""; el.disabled = false; }
+        });
+
+        // set chosen size text if applicable
+        const chosenSize = document.getElementById("chosenSize");
+        if (chosenSize) chosenSize.innerText = "Chosen Size: " + (orderObj.size || "None");
+
+        // restore selected fabrics visually in design page (if orderObj.selectedFabrics present)
+        if (orderObj.selectedFabrics && Array.isArray(orderObj.selectedFabrics) && selectedFabricContainer) {
+          let html = '<div class="fabric-gallery">';
+          orderObj.selectedFabrics.forEach((f, i) => {
+            html += `
+            <div class="fabric-item selected" data-index="${i}">
+              <img src="${f.image}" alt="${escapeHtml(f.name)}" class="fabric-img">
+              <p>${escapeHtml(f.name)}</p>
+            </div>`;
+          });
+          html += '</div>';
+          selectedFabricContainer.innerHTML = html;
+        }
+      } catch (err) {
+        console.error("populateForm error:", err);
+      }
+    }
+
+    // ✅ Submit All -> show popup and confetti
+    if (submitAllBtn) {
+      submitAllBtn.addEventListener("click", () => {
+        if (!ordersList || ordersList.children.length === 0) {
+          alert("⚠️ No orders added to submit!");
+          return;
+        }
+
+        // Show popup
+        popup.style.display = "flex";
+
+        // Confetti effect
+        const container = popup.querySelector(".popup-content") || popup;
+        for (let i = 0; i < 25; i++) {
+          let confetti = document.createElement("div");
+          confetti.classList.add("confetti");
+          confetti.style.left = Math.random() * 100 + "%";
+          confetti.style.backgroundColor = ["#f4b942", "#ff6f61", "#4caf50", "#2196f3"][Math.floor(Math.random() * 4)];
+          confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+          container.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3000);
+        }
+      });
+    }
+
+// ✅ Popup OK handler: save orders to localStorage (keep them visible)
+if (popupOkBtn) {
+  popupOkBtn.addEventListener("click", () => {
+    popup.style.display = "none";
+
+    const allOrders = [];
+    let totalDesignerFee = 0;
+
+    document.querySelectorAll(".order-card").forEach(card => {
+      const feeVal = parseInt(card.dataset.fee) || 0;
+      totalDesignerFee += feeVal;
+      allOrders.push({
+        title: card.querySelector("h4")?.innerText || "",
+        details: card.querySelector(".order-details")?.innerHTML || "",
+        fee: card.querySelector(".order-fee")?.innerText || ""
+      });
+    });
+
+    // ✅ Save to localStorage (don’t clear the list)
+    localStorage.setItem("submittedOrders", JSON.stringify(allOrders));
+    localStorage.setItem("designerTotalFee", totalDesignerFee);
+
+    // ✅ Keep orders visible on designer page (already there)
+    if (form) form.reset();
+
+    // ✅ Update slide cart immediately
+    if (typeof updateSlideCart === "function") {
+      updateSlideCart();
+    }
+
+    // ✅ Global listener: when designer fee changes, update slide cart
+window.addEventListener("storage", (e) => {
+  if (e.key === "designerTotalFee") {
+    if (typeof updateSlideCart === "function") {
+      updateSlideCart();
+    }
+  }
+});
+  });
+}
+
+
+
+// ✅ Restore saved orders visually and sync fee when page loads
+document.addEventListener("DOMContentLoaded", () => {
+  const savedOrders = JSON.parse(localStorage.getItem("submittedOrders")) || [];
+
+  if (savedOrders.length > 0 && ordersList && ordersList.children.length === 0) {
+    savedOrders.forEach(order => {
+      const card = document.createElement("div");
+      card.classList.add("order-card");
+
+      // 💡 Optional: store numeric fee for future recalculation
+      const numericFee = parseInt(order.fee.replace(/\D/g, "")) || 0;
+      card.dataset.fee = numericFee;
+
+      card.innerHTML = `
+        <h4>${order.title}</h4>
+        <div class="order-details">${order.details}</div>
+        <p class="order-fee">${order.fee}</p>
+      `;
+      
+    });
+
+    // ✅ Recalculate designer fee from restored orders
+    let totalDesignerFee = 0;
+    savedOrders.forEach(order => {
+      const numericFee = parseInt(order.fee.replace(/\D/g, "")) || 0;
+      totalDesignerFee += numericFee;
+    });
+    localStorage.setItem("designerTotalFee", totalDesignerFee);
+
+    // ✅ Update slide cart
+    if (typeof updateSlideCart === "function") {
+      updateSlideCart();
+    }
+  }
+});
+
+
+
+
+
+
+
+        // ---- Add to Order: build order object, include selected fabrics and design preview ----
+        if (addToOrderBtn && form) {
+          addToOrderBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const order = {};
+            formData.forEach((v, k) => order[k] = v);
+
+            // Require basic fields
+            if (!order.name || !order.designerFees) {
+              alert("⚠️ Please fill at least your Name and Designer Fee before adding.");
+              return;
+            }
+
+            // Capture selected size display if a visible element exists
+            const chosenSizeEl = document.getElementById("chosenSize");
+            if (chosenSizeEl) order.size = chosenSizeEl.innerText.replace("Chosen Size: ", "") || "";
+
+            // Capture selected design HTML
+            const selectedDesignEl = document.getElementById("selectedDesign");
+            if (selectedDesignEl && selectedDesignEl.innerHTML.trim() !== "<p>No design selected yet.</p>") {
+              order.designHTML = selectedDesignEl.innerHTML;
+            }
+
+            // Capture selected fabrics from selectedFabricContainer
+            order.selectedFabrics = [];
+            if (selectedFabricContainer) {
+              // prefer to store array of minimal fabric data (image + name)
+              selectedFabricContainer.querySelectorAll('.fabric-item.selected, .fabric-item').forEach(f => {
+                const img = f.querySelector('img');
+                const name = f.querySelector('p')?.innerText || "";
+                if (img) {
+                  // only push selected items if selected class present; if none have .selected, push all (so user gets the cart items)
+                  if (f.classList.contains('selected')) {
+                    order.selectedFabrics.push({ image: img.src, name: name });
+                  }
+                }
+              });
+              // if no .selected found, fallback to saving all fabrics visible
+              if (order.selectedFabrics.length === 0 && selectedFabricContainer.querySelectorAll('.fabric-item').length) {
+                selectedFabricContainer.querySelectorAll('.fabric-item').forEach(f => {
+                  const img = f.querySelector('img');
+                  const name = f.querySelector('p')?.innerText || "";
+                  if (img) order.selectedFabrics.push({ image: img.src, name });
+                });
+              }
+            }
+
+            // Create and append card
+            const card = createOrderCard(order);
+            ordersList.appendChild(card);
+
+            // animate show (optional)
+            setTimeout(() => card.classList.add("show"), 50);
+
+
+
+            // After adding, reset form inputs and previews (similar to your behavior)
+            form.reset();
+            const chosenSizeDisplay = document.getElementById("chosenSize");
+            if (chosenSizeDisplay) chosenSizeDisplay.innerText = "Chosen Size: None";
+            // remove selected highlights from fabric gallery (if you want)
+            if (selectedFabricContainer) selectedFabricContainer.querySelectorAll('.fabric-item.selected').forEach(i => i.classList.remove('selected'));
+
+          });
+        }
+
+        // ---- Cancel button resets form and previews ----
+        if (cancelBtn && form) {
+          cancelBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            form.reset();
+            const chosenSizeDisplay = document.getElementById("chosenSize");
+            if (chosenSizeDisplay) chosenSizeDisplay.innerText = "Chosen Size: None";
+
+            ["neck_note", "sleeves_note", "accessories_note"].forEach(id => {
+              const ta = document.getElementById(id);
+              if (ta) { ta.value = ""; ta.disabled = true; }
+            });
+
+            // Reset selected design & fabrics
+            resetDesignPreviewAndForm();
+            // Reset any designer checkboxes
+            const regularCheck = document.getElementById("regularCheck");
+            const urgentCheck = document.getElementById("urgentCheck");
+            if (regularCheck) regularCheck.checked = false;
+            if (urgentCheck) urgentCheck.checked = false;
+          });
+        }
+
+
+
+      })(); // IIFE end
+</script>
+
+
+<script>
+    // Example: These values will actually come dynamically from designer page
+    const designerData = {
+      name: "May Myat War Soe",
+      baseFee: 100000,
+      urgentFee: 50000,
+      standardTime: "2 weeks",
+      urgentTime: "10 days"
+    };
+
+    const regularCheck = document.getElementById("regularCheck");
+    const urgentCheck = document.getElementById("urgentCheck");
+    const infoBox = document.getElementById("designerInfo");
+
+    const nameDisplay = document.getElementById("designerNameDisplay");
+    const feesDisplay = document.getElementById("designerFeesDisplay");
+    const timeDisplay = document.getElementById("waitingTimeDisplay");
+
+    // Hidden inputs for form submission
+    const hiddenName = document.getElementById("designerName");
+    const hiddenFees = document.getElementById("designerFees");
+    const hiddenTime = document.getElementById("waitingTime");
+    infoBox.style.display = "none";
+    // Regular option
+    regularCheck.addEventListener("change", function () {
+      if (this.checked) {
+        urgentCheck.checked = false; // uncheck urgent
+        infoBox.style.display = "block";
+
+        // Fill data for Regular
+        nameDisplay.textContent = designerData.name;
+        feesDisplay.innerHTML =
+          `${designerData.baseFee.toLocaleString()} MMK`;
+        timeDisplay.textContent = designerData.standardTime;
+
+        // Hidden inputs
+        hiddenName.value = designerData.name;
+        hiddenFees.value = designerData.baseFee;
+        hiddenTime.value = designerData.standardTime;
+      } else {
+        infoBox.style.display = "none";
+      }
+    });
+
+    // Urgent option
+    urgentCheck.addEventListener("change", function () {
+      if (this.checked) {
+        regularCheck.checked = false; // uncheck regular
+        infoBox.style.display = "block";
+
+        // Calculate urgent total
+        let urgentTotal = designerData.baseFee + designerData.urgentFee;
+
+        // Fill data for Urgent (with breakdown)
+        nameDisplay.textContent = designerData.name;
+        feesDisplay.innerHTML =
+          `${urgentTotal.toLocaleString()} MMK <small>(Urgent Fee: ${designerData.urgentFee.toLocaleString()} MMK + Base Fee: ${designerData.baseFee.toLocaleString()} MMK)</small>`;
+        timeDisplay.textContent = designerData.urgentTime + " (Order will arrive in 10 days)";
+
+        // Hidden inputs
+        hiddenName.value = designerData.name;
+        hiddenFees.value = urgentTotal;
+        hiddenTime.value = designerData.urgentTime + " (10 days)";
+      } else {
+        // If both unchecked → hide box
+        if (!regularCheck.checked) {
+          infoBox.style.display = "none";
+        }
+      }
+    });
+</script>
+
+<!-- DESIGN Gallery -->
+<script>
+    // Tab Switching
+    const tabs = document.querySelectorAll('.category-tabs button');
+    const grids = document.querySelectorAll('.design-grid');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Activate tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show corresponding grid
+        grids.forEach(grid => grid.classList.remove('active'));
+        if (tab.id === 'youngBtn') document.getElementById('youngGrid').classList.add('active');
+        if (tab.id === 'adultBtn') document.getElementById('adultGrid').classList.add('active');
+        if (tab.id === 'elderlyBtn') document.getElementById('elderlyGrid').classList.add('active');
+      });
+    });
+    // Single Selection Across All with Toggle + Styled Preview
+    const designItems = document.querySelectorAll('.design-item');
+    const designPreview = document.getElementById('selectedDesign');
+    const designInput = document.getElementById('designItems');
+
+    designItems.forEach(item => {
+      item.addEventListener('click', () => {
+        if (item.classList.contains('selected')) {
+          // Unselect
+          item.classList.remove('selected');
+          designPreview.innerHTML = "";
+          designInput.value = "";
+        } else {
+          // Remove selection from others
+          designItems.forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+
+          // Get data
+          const code = item.getAttribute('data-code');
+          const img = item.getAttribute('data-img');
+
+          // Show selected card (reuse same design-item style with adjusted size)
+          designPreview.innerHTML = `
+        <div class="design-item selected" style="
+            width: 140px;
+            height: 200px;
+            border-radius: 8px;
+            text-align: center;
+            background: #fff;
+        ">
+          <img src="${img}" alt="Selected Design" style="
+          
+              height: 155px; 
+              object-fit: cover; 
+            
+          ">
+          <p style="margin-top: 5px; font-size: 14px;">Design Code: ${code}</p>
+        </div>
+      `;
+
+          // Save selected code for form submission
+          designInput.value = code;
+        }
+      });
+    });
+
+</script>
+
+<script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const selectedFabric = document.getElementById('selectedFabric');
+        const fabrics = JSON.parse(localStorage.getItem('selectedFabrics')) || [];
+
+        if (!selectedFabric) return;
+
+        if (fabrics.length === 0) {
+          selectedFabric.innerHTML = '<p>No fabric selected yet.</p>';
+          return;
+        }
+
+        let fabricHTML = '<div class="fabric-gallery">';
+        fabrics.forEach((item, index) => {
+          fabricHTML += `
+      <div class="fabric-item" data-index="${index}">
+        <img src="${item.image}" alt="${item.name}" class="fabric-img">
+        <p>${item.name}</p>
+      </div>
+    `;
+        });
+        fabricHTML += '</div>';
+
+        selectedFabric.innerHTML = fabricHTML;
+
+        // Enable click selection
+        const fabricItems = selectedFabric.querySelectorAll('.fabric-item');
+        fabricItems.forEach(item => {
+          item.addEventListener('click', () => {
+            item.classList.toggle('selected');
+          });
+        });
+      });
+
+</script>
+{% endblock %}
